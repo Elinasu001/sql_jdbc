@@ -16,3 +16,11 @@
   - 리터럴
   - DISTINCT
   - WHERE 절
+  - 논리연산자
+  - BETWEEN AND>  / <NOT BETWEEN AND
+  - LIKE '특정패턴'
+  - IS NULL / IS NOT NULL
+  - 연결연산자 ||
+  - IN
+  - 연산자 우선순위
+  - **ORDER BY**
