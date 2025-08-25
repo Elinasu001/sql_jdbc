@@ -402,12 +402,12 @@ SELECT
   FROM
        EMPLOYEE
  WHERE
-       PHONE LIKE '____9%';
+       PHONE LIKE '___9%';
 --SELECT * FROM EMPLOYEE;
 -- 2. EMPLOYEE 테이블로부터 이름이 '영' 으로 끝나는 사원들의 이름, 입사일
 SELECT
        EMP_NAME
-     , SYSDATE - HIRE_DATE
+     , HIRE_DATE
   FROM 
        EMPLOYEE
  WHERE
