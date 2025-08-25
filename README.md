@@ -33,4 +33,5 @@
     - SUBSTR(STR, POSITION, LENGTH)
 ---
 🛠 개발 환경
+Oracle Database 18c
 
