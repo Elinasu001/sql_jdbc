@@ -430,3 +430,139 @@ SELECT
  WHERE
        DEPT_TITLE LIKE '%해외영업%';
 --SELECT * FROM DEPARTMENT;
+-------------------------------------------------------------------------
+/*
+ * <IS NULL>
+ * 
+ * [표현법]
+ * 비교대상컬럼 IS NULL : 컬럼값이 NULL일 경우
+ * 비교대상컬럼 IS NOT NULL : 컬럼값이 NULL이 아닐 경우
+ */
+
+SELECT 
+       EMP_NAME
+     , BONUS
+  FROM 
+        EMPLOYEE;
+-- EMPLOYEE 테이블로부터 보너스를 받지 않는(보너스가 없는) 사원들의 사원명, 보너스 조회
+SELECT
+       EMP_NAME
+     , BONUS
+  FROM 
+  	   EMPLOYEE
+ WHERE
+       --BONUS IS NULL;
+		BONUS IS NOT NULL;
+-------------------------------------------------------------------------
+/*
+ * <연결연산자 ||>
+ * 
+ * 여러개의 컬럼 값들을 마치 하나의 컬럼인 것처럼 연결시켜주는 연산자
+ * 컬럼값 또는 리터럴(문자열)을 전부 다 합칠 수 있음
+ * 
+ * System.out.println(num + "sdfsd");
+ */
+SELECT
+ 	   EMP_ID || EMP_NAME
+  FROM  
+       EMPLOYEE;
+
+SELECT EMP_ID || '번 사원 ' || EMP_NAME || '님의 핸드폰 번호는 ' ||
+	   PHONE || '입니다.' AS "사원의 정보"	
+  FROM
+       EMPLOYEE;
+
+-------------------------------------------------------------------------
+/*
+ * <IN>
+ * 비교대상 컬럼값에 내가 제시한 목록들 중에 일치하는 값이 있는지
+ */
+-- EMPLOYEE 테이블로부터 부서코드가 D6 이거나 D8이거나 D5인 사원들의 사원명, 부서코드 조회
+SELECT
+       DEPT_CODE
+  FROM
+       EMPLOYEE
+ WHERE
+       DEPT_CODE IN ('D6', 'D8', 'D5');
+       /*DEPT_CODE = 'D6'
+    OR
+       DEPT_CODE = 'D8'
+    OR
+       DEPT_CODE = 'D5';*/
+
+-------------------------------------------------------------------------
+/*
+ * <연산자 우선순위>
+ * 
+ * 1. ()
+ * 2. 산술연산자
+ * 3. 연결연산자
+ * 4. 비교연산자
+ * 5. IS NULL, LIKE, IN (왼쪽부터)
+ * 6. BETWEEN AND
+ * 7. NOT
+ * 8. AND
+ * 9. OR
+ */
+-------------------------------------------------------------------------
+/*
+ * <★☆★☆★★☆☆★☆★☆★ ORDER BY 절 ★☆★☆★★☆☆★☆★☆★>
+ * 정렬용도로 사용하는 구문
+ * SELECT 문에 가장 마지막에 작성하는 문법 + 실행 순서 또한 가장 마지막
+ * ORDER BY 절을 작성하지 않으면 ResultSet은 정렬이 안된 상태이다.
+ * 
+ * [표현법]
+ * SELECT 
+ *        컬럼명
+ *      , 컬럼명
+ *      , ...
+ *  FROM
+ *        테이블명
+ *  WHERE 
+ *        조건식(생략가능)
+ *  ORDER
+ *     BY
+ *        [정렬기준으로 삼고싶은 컬럼명 / 별칭 / 컬럼순번]
+ * 		  [ASC / DESC]
+ * 		  [NULLS FIRST / NULLS LAST] (생략가능 : NULL 값을 앞으로 뺄 것인지 뒤로 뺄 것인지)
+ * 
+ * - ASC : 오름차순 정렬(기본값)
+ * - DESC : 내림차순 정렬
+ * 
+ * - NULLS FIRST : 컬럼값이 NULL일 경우 조회결과의 위쪽에 배치(내림차순일 경우 기본값)
+ * - NULLS LAST : 컬럼값이 NULL일 경우 조회결과의 아래쪽에 배치(오름차순일 경우 기본값)
+ * 
+ */ 
+
+SELECT
+       EMP_ID
+     , EMP_NAME
+  FROM 
+       EMPLOYEE;
+
+SELECT
+       EMP_ID
+     , EMP_NAME
+     , BONUS
+  FROM
+       EMPLOYEE 
+ ORDER 
+    BY 
+--     BONUS; -- ASC / DESC 생략 시 ASC(오름차순)
+--     BONUS DESC;  -- 내림차순 정렬 시 기본적으로 NULLS FIRST
+--	   BONUS DESC NULLS LAST;
+       BONUS, EMP_ID, EMP_NAME; -- 첫 번째로 제시한 정렬기준의 컬럼값이 동일한 경우 다음 정렬기준을 명시할 수 있음
+-------- 주의 !! --------
+SELECT
+       EMP_NAME
+     , SALARY * 12 AS "연봉" -- 3.
+  FROM 
+       EMPLOYEE -- 1.
+ WHERE
+       SALARY * 12 > 40000000 -- 2.
+ ORDER
+    BY
+       연봉; -- 4. 정렬은 필요한 만큼 뽑아와서 정렬을 하는 것이 더 효율적이다.
+       --2; -- 숫자로 정하는 건데 이 경우 순서라는 건 얼마든지 변경이 가능하기 때문에 그때마다 수정이 되야하니 권장하지 않는다 !!!!
+
+
