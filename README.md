@@ -29,5 +29,8 @@
 - FUNCTION 함수
   - 단일행 함수
     - LENGTH / LENGTHB
-    - INSTR
-    - SUBSTR
+    - INSTR(STR)
+    - SUBSTR(STR, POSITION, LENGTH)
+---
+🛠 개발 환경
+
