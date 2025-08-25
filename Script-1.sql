@@ -18,7 +18,7 @@
  * 
  * SELECT 문의 결과는 행 단위로 조회됨
  * 
- * - ResultSet : 조회된 행들의 집합 // SELECT문을 통해 조회된 데이터 결과물을 의미함
+ * - ResultSet★★★★★ : 조회된 행들의 집합 // SELECT문을 통해 조회된 데이터 결과물을 의미함
  * 
  */
 -- EMPLOYEE 테이블에서 모든 컬럼을 전부 다 조회하겠다.
@@ -159,8 +159,94 @@ SELECT
  * < WHERE 절 >
  * 조회하고자 하는 테이블에 특정 조건을 제시해서
  * 조건에 만족하는 행만 조회하고자 할 때 기술하는 구문
+ * 
+ * [표현법]
+ * SELECT
+ * 		  컬럼명
+ * 		, 컬럼명
+ * 		, 컬렴명
+ * 	FROM
+ * 		  테이블명
+ * WHERE
+ * 		  조건식;
+ * 
+ * - 조건식에 다양한 연산자들을 사용할 수 있음
+ * <비교연산자>
+ * >, <, <=, >= // 대소비교
+ * 
+ * =, != // 동등비교
+ * 
  */
 
+-- EMPLOYEE 테이블로부터 사원들의 사원명, 급여 조회 --> 급여가 300만원 이상인 사원들만
+SELECT  
+	    EMP_NAME
+	  , SALARY
+   FROM
+   		EMPLOYEE
+  WHERE
+	    SALARY >= 3000000;
 
+-- EMPLOYEE 테이블로부터 부서코드가 D9인 사원들의 사원명, 부서코드 조회
+SELECT
+	    EMP_NAME
+	  , DEPT_CODE
+   FROM 
+		EMPLOYEE
+  WHERE
+		DEPT_CODE = 'D9'; -- 문자열 사용 시 ''
+		
+-- EMPLOYEE 테이블로부터 부서코드가 D9가 아닌 사원들의 사원명, 전화번호 조회
+SELECT
+	   EMP_NAME
+	 , PHONE
+  FROM
+	   EMPLOYEE
+ WHERE
+  	   DEPT_CODE != 'D9'; -- 젤 많이 사용됨 아래는 혹시나 모를 경우를 대비해서 알아두기
+	   --DEP_CODE ^= 'D9';
+ 	   --DEPT_CODE <> 'D9';
+  	   
+-- 실행순서 1. FROM -> 2. WHERE -> 3. SELECT ★★★★★★
+-------------------------------------------------------------------------
+/*
+ * <실습>
+ */
+-- 1. EMPLOYEE 테이블에서 급여가 250 만원 이상인 사원들의 이름, 급여, 입사일 조회
+SELECT
+ 	   EMP_NAME
+ 	 , SALARY
+ 	 , SYSDATE - HIRE_DATE
+  FROM 
+       EMPLOYEE
+ WHERE 
+        SALARY >= 2500000;
 
+-- 2. EMPLOYEE 테이블에서 부서코드가 D6인 사원들의 이름, 급여 보너스 조회
+SELECT
+       EMP_NAME
+     , SALARY
+     , BONUS
+  FROM
+  	   EMPLOYEE
+ WHERE
+	   DEPT_CODE = 'D6';
 
+-- 3. EMPLOYEE 테이블에서 현재 재직중인 사원(ENT_YN == 'N')들의 이름, 입사일 조회
+SELECT
+       EMP_NAME
+     , HIRE_DATE
+  FROM
+	   EMPLOYEE
+ WHERE
+	   ENT_YN = 'N';
+-- 4. EMPLOYEE 테이블에서 연봉이 5000 이상인 사원들의 이름 연봉 조회
+-- 단, 연봉컬럼은 별칭으로 연봉으로 조회되게 할 것.
+SELECT
+        EMP_NAME
+      , (SALARY * 12) AS "연봉"
+  FROM
+  		EMPLOYEE
+ WHERE
+ 	    (SALARY * 12) >= 50000000;
+  	   
