@@ -134,10 +134,23 @@ SELECT
 SELECT
        EMP_NAME
      , SALARY
+     , '원' 단위
    FROM
         EMPLOYEE;
 
+-------------------------------------------------------------------------
+/*
+ * <DISTINCT>
+ * 
+ * 조회하고자하는 컬럼 앞에 작성하여 중복된 값을 딱 한번만 조회하는 용도
+ * 
+ * 주의) SELECT에 DISTINCT 구문은 한 개만 사용이 가능
+ */
 
+SELECT
+	    DEPT_CODE
+   FROM 
+   		EMPLOYEE;
 
 
 
