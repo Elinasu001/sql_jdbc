@@ -135,7 +135,7 @@ SELECT
        EMP_NAME
      , SALARY
      , '원' 단위
-   FROM
+  FROM
         EMPLOYEE;
 
 -------------------------------------------------------------------------
@@ -249,4 +249,184 @@ SELECT
   		EMPLOYEE
  WHERE
  	    (SALARY * 12) >= 50000000;
-  	   
+-------------------------------------------------------------------------
+/*
+ * <논리 연산자>
+ * 
+ * 여러 개의 조건을 엮을 때 사용
+ * AND(이면서 ~, 그리고) OR(~~거나, 또는)
+ */
+
+-- EMPLOYEE 테이블에서 부서코드가 'D9' 면서 급여가 500만원 이하인 사원들의 
+-- 사원명, 부서코드, 급여 조회
+SELECT
+       EMP_NAME
+     , DEPT_CODE
+     , SALARY  
+  FROM
+       EMPLOYEE
+ WHERE
+       DEPT_CODE = 'D9' 
+   AND 
+	   SALARY <= 5000000;
+
+-- EMPLOYEE 테이블로부터 부서코드가'D6'이거나 그병가 300만원 이상인 사원들의
+-- 이름, 부서코드, 급여 조회
+SELECT
+	    EMP_NAME
+	  , DEPT_CODE
+	  , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+       DEPT_CODE = 'D6'
+    OR
+       SALARY >= 3000000;
+
+-- EMPLOYEE 테이블로부터 급여컬럼의 값이 350만원 이상이고 500만원 이하인 사원들의
+-- 사번(EMP_ID), 이름, 급여를 조회
+SELECT
+       EMP_ID
+     , EMP_NAME
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+ 	   SALARY >= 3500000
+   AND
+       SALARY <= 5000000;
+-------------------------------------------------------------------------
+/*
+ * <BETWEEN AND> [v] - 위에 보다 이 것을 선호함!
+ * 몇 이상 몇 이하인 범위에 대해서 조건을 제시할 때 사용
+ * 
+ * [표현법]
+ * 비교대상컬럼명 BETWEEN 하한값 AND 상한값
+ */
+-- EMPLOYEE 테이블에서 급여가 350이상 500 이하인 사원들의 사번 이름 직급코드 (JOB_CODE)
+SELECT
+       EMP_ID
+     , EMP_NAME 
+     , JOB_CODE
+  FROM
+       EMPLOYEE
+ WHERE 
+ 	   SALARY BETWEEN 3500000 AND 5000000;
+-- EMPLOYEE 테이블에서 급여가 350미만이거나 500 초과하는 사원들의 사번, 이름, 직급코드((JOB_CODE)부정 버전)
+--> 날짜 체크 할 때 많이 사용됨
+SELECT
+       EMP_ID
+     , EMP_NAME
+     , JOB_CODE
+  FROM
+	   EMPLOYEE
+ WHERE
+ 	   SALARY NOT BETWEEN 3500000 AND 5000000;
+--> 오라클에서의 NOT 은 자바의 !와 동일한 의미이다.
+/*
+ * FROM
+ *       TB_HOTEL
+ * WHERE
+ *       LOCATION = '오사카'
+ *   AND 
+ *       DATE BETWEEN '09/09' AND '09/11'  
+ */
+-- BETWEEN AND 연산자는 DATE 형식에도 사용가능
+-- 입사일이 '90/01/01' ~ '03/01/01' 인 사원들의 이름 입사일 조회
+SELECT
+       EMP_NAME
+     , HIRE_DATE
+  FROM
+        EMPLOYEE
+ WHERE
+       HIRE_DATE BETWEEN  '90/01/01' AND '03/01/01';
+-------------------------------------------------------------------------
+/*
+ * <LIKE '특정패턴'>
+ * 비교하려는 컬럼의 값이 내가 지정한 특정 패턴에 만족할 경우 조회
+ * 
+ * [표현법]
+ * 비교대상컬럼 LIKE '특정패턴'
+ * 
+ * - 특정패턴 --> 와일드카드
+ * 
+ * '%', '_' 두 가지를 가지고 패턴을 만들 수 있음
+ * 
+ * '%' : 0글자 이상 비교하고 싶을 경우 
+ *       비교대상컬럼 LIKE 'A%' => 컬럼값 중 'A' 로 시작하는 것만 조회 (예)Apple, Add, A)
+ * 		 비교대상컬럼 LIKE '%A' => 컬럼값 중 'A' 로 끝나는 것만 조회 (예)BananA, GoliA, A)
+ *       비교대상컬럼 LIKE '%A%' => 컬럼값 중 'A' 가 포함되는 것을 전부 조회
+ * '_' : 1글자
+ *       비교대상컬럼 LIKE '_A' => 컬럼값에 'A' 앞에 무조건 1글자가 있어야만 패턴에 만족
+ * 		 비교대상컬럼 LIKE '__A' => 컬럼값에 'A' 앞에 무조건 2글자가 있어야만 패턴에 만족
+ */
+-- EMPOLOYEE 테이블로부터 모든 사원의 이름, 전화번호 조회
+SELECT
+       EMP_NAME
+     , PHONE
+  FROM
+       EMPLOYEE;
+-- EMPLOYEE 테이블에서 성이 '박'씨인 사원들의 사원명, 전화번호
+
+SELECT
+       EMP_NAME
+     , PHONE
+ FROM
+       EMPLOYEE
+ WHERE
+       EMP_NAME LIKE '박%';
+
+-- EMPLOYEE 테이블에서 이름에 '준' 이라는 글자가 포함된 사원들의 사원명, 폰번호
+SELECT
+	   EMP_NAME
+	 , PHONE
+  FROM
+       EMPLOYEE
+ WHERE
+       EMP_NAME LIKE '%준%'; -- 준이 무조건 들어갈 경우
+-- 이름의 두 번째 글자가 '승' 인 사원들의 사원명, 핸드폰번호
+SELECT
+       EMP_NAME
+     , PHONE
+  FROM
+  	   EMPLOYEE
+ WHERE
+       --EMP_NAME LIKE '_승_' -- 가운데 글자가 승
+       EMP_NAME NOT LIKE '_승_'; -- 가운데 승이 안들어갈 경우
+-- for charArr [1].equals("승"); --> java 문인데 쿼리가 훨씬 더 효율적이다.
+-------------------------------------------------------------------------
+-- 1. EMPLOYEE 테이블로부터 전화번호 4번째 자리가 9로 시작하는 사원들의 사원명, 전화번호
+SELECT
+       EMP_NAME
+     , PHONE
+  FROM
+       EMPLOYEE
+ WHERE
+       PHONE LIKE '____9%';
+--SELECT * FROM EMPLOYEE;
+-- 2. EMPLOYEE 테이블로부터 이름이 '영' 으로 끝나는 사원들의 이름, 입사일
+SELECT
+       EMP_NAME
+     , SYSDATE - HIRE_DATE
+  FROM 
+       EMPLOYEE
+ WHERE
+       EMP_NAME LIKE '%영';
+   
+-- 3. EMPLOYEE 테이블로부터 전화번호 처음 3자리가 010아닌 사원들의 이름, 전화번호  
+SELECT
+       EMP_NAME
+     , PHONE
+  FROM  
+       EMPLOYEE
+ WHERE
+       PHONE NOT LIKE '010%';
+
+-- 4. DEPARTMENT 테이블로부터 해외영업과 관련된 부서들의 부서명 조회
+SELECT
+       DEPT_TITLE
+  FROM
+       DEPARTMENT
+ WHERE
+       DEPT_TITLE LIKE '해외%';
+--SELECT * FROM DEPARTMENT;
