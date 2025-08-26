@@ -91,7 +91,7 @@ SELECT
        EMP_NAME
      , SALARY
      , BONUS
-     , ((SALARY * BONUS + BONUS) * 12)
+     , (SALARY + SALARY * BONUS) * 12
   FROM
        EMPLOYEE;
 --> 산술연산 과정에서 NULL 값이 존재할 경우 산술연산의 결과도 NULL이 된다.

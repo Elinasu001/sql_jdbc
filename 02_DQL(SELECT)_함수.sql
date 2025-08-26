@@ -4,11 +4,23 @@
 	자바로 따지면 메소드
 	전달된 값을 가지고 계산된 결과를 반환해준다
 	
-	- 단일행 함수
-	- 그룹 함수
+	- 단일행 함수 : N개의 값을 읽어서 N개의 결과를 반환(매 행마다 함수 결과 반환)
+	- ★★★★그룹 함수★★★★ :: N개의 값을 읽어서 1개의 결과를 반환(그룹별로 함수 결과 반환)
 	
 */
 ------------------------- <단일행 함수> -------------------------
+SELECT
+ 	   SALARY
+ 	 , LENGTH(SALARY)
+-- 	 , SUM(SALARY) -- LENGTH 랑 SUM 같이 사용 안됨, resultSet에 들어갈 수 없음.
+  FROM
+       EMPLOYEE;
+
+-- 단일행 함수와 그룹함수는 함께 사용할 수 없음 : 결과 행의 개수가 다릑 떄문이다.★★★★ 
+
+
+
+
 /*
 	<문자열과 관련된 함수>
 	LENGTH / LENGTHB
@@ -164,8 +176,9 @@ SELECT
         EMP_NAME
       , EMP_NO
   FROM
-        EMPLOYEE; -- 정보를 띄울 경우 이름 성, 주민등록번호는 뒤 앞자리 1자리만 보여준다.
-
+        EMPLOYEE; 
+        
+-- 정보를 띄울 경우 이름 성, 주민등록번호는 뒤 앞자리 1자리만 보여준다.
 -- EMPLOYEE 테이블에서 모든 직원의 사원명과 주민등록번호 뒤 6자리를 마스킹 처리해서 조회하기
 -- 예시 => 이** 621335-1******
 
@@ -572,8 +585,212 @@ SELECT
         DUAL;
 --------------------------------------------------------
 /*
+	<NULL 처리 함수>
 	
-
+	NVL(컬럼명, 해당 컬럼값이 NULL 값일 경우 반환할 결과값)
 */
-    
-      
+-- EMPLOYEE 테이블로부터 사원명, 보너스
+SELECT
+       EMP_NAME
+     , BONUS
+     , NVL(BONUS, 0) -- NUL 이면 0으로 치환
+  FROM
+       EMPLOYEE;
+
+-- 보너스 포함 연봉조회
+SELECT
+       EMP_NAME
+     , (SALARY + SALARY * NVL(BONUS, 0)) * 12
+     , NVL(DEPT_CODE, '부서 없음') --  D8 / 부서 없음
+  FROM 
+       EMPLOYEE;
+
+-- NVL2(컬럼명, 결과값1, 결과값2)
+-- 해당 컬럼에 값이 존재할 경우 결과값 1을 반환
+-- 해당 컬럼에 값이 NULL 값일 경우 결과값 2를 반환
+SELECT
+       EMP_NAME
+     , DEPT_CODE
+     , NVL2(DEPT_CODE, '부서 배치 완료', '부서 없음') -- 부서 배치 완료 / 부서 없음
+  FROM 
+       EMPLOYEE;
+
+-- NULLIF(비교대상1, 비교대상2)
+-- 두 개의 값이 동일할 경우 NULL을 반환
+-- 두 개의 값이 동일하지 않을 경우 비교대상 1을 반환
+SELECT
+       NULLIF('1', '1') -- NULL
+     , NULLIF('1', '2') -- 1
+  FROM 
+       DUAL;
+--------------------------------------------------------
+/*
+	< 선택함수 >
+	
+	DECODE(비교대상(컬럼명/산술연산/함수식), 조건값1, 결과값1, 조건값2, 결과값3,,,결과값(java == default));
+	
+	- 자바에서의 switch문과 유사
+	switch(비교대상){
+	case 조건값1 : 결과값;
+	case 조건값2 : 결과값;
+	default : 결과값;	
+	}
+*/
+
+--EMPLOYEE 테이블 사원명, 성별 __ 한줄로 쓰기 이건 보기용
+SELECT
+       EMP_NAME
+     , EMP_NO
+     , DECODE(SUBSTR(EMP_NO, 8, 1),
+       1, '남성',
+  	   2, '여성',
+  	   '성별 선택 안함'
+       ) AS "성별"
+  FROM
+       EMPLOYEE;
+
+
+-- 직원들의 급여를 인상시켜서 조회
+-- 직급코드(JOB_CODE)가 'J7'인 사원들의 급여는 15%인상해서 조회 -- 1.
+-- 직급코드가 'J6'인 사원들의 급여는 20% 인상해서 조회 -- 2.
+-- 직급코드가 'J5'인 사원들의 급여는 30% 인상해서 조회
+-- 나머지 직급인 사원들의 급여는 5% 인상해서 조회
+SELECT
+        EMP_NAME
+      , SALARY
+      , JOB_CODE
+      , DECODE(JOB_CODE, 'J7', (SALARY + SALARY * 0.15)
+					   , 'J6', (SALARY + SALARY * 0.2)
+					   , 'J5', (SALARY + SALARY * 0.3)
+					   , (SALARY + SALARY * 0.05)) "인상 후 급여" 
+   FROM
+		EMPLOYEE;
+
+--------------------------------------------------------
+/*
+	CASE WHEN THEN 구문
+	
+	- DECODE랑 비교했을 때 DECODE는 동등비교만 수행
+	  CASE WHEN THEN 다양한 조건식을 기술 가능
+	  
+	[표현법]
+	CASE
+		WHEN 조건식1 THEN 결과값1
+		WHEN 조건식2 THEN 결과값2
+		...
+		ELSE 결과값
+	END
+*/
+
+SELECT
+       EMP_NAME
+     , CASE
+     	WHEN SUBSTR(EMP_NO, 8, 1) = '1' THEN '남성'
+     	WHEN SUBSTR(EMP_NO, 8, 1) = '2' THEN '여성'
+     	ELSE '성별선택안함'
+       END "성별"
+  FROM
+	   EMPLOYEE;  
+ 
+--------------------------------------------------------
+------------------------★★★★<그룹 함수>★★★★--------------------------------
+/*
+	이건 5개 나오는데 무조건 외우기 !!!!!!
+	N개의 값을 읽어서 1개의 결과를 반환(하나의 그룹별로 함수 실행결과를 반환)
+	
+	1. SUM(숫자타입)
+	2. AVG(숫자타입)
+	3. MIN(ANY)
+	4. MAX(ANY)
+	5. COUNT(*'/ 컬럼명 / DISTINCT 컬럼명)
+	
+*/
+
+SELECT 
+       SALARY
+  FROM
+       EMPLOYEE;
+
+-- 1. SUM(숫자타입) : 해당 컬럼값들의 총 합계를 반환해주는 함수
+-- 전체 사원의 총 급여합계
+SELECT
+       SUM(SALARY)
+  FROM
+       EMPLOYEE;
+
+
+
+SELECT
+       EMP_NAME
+     , EMAIL
+  FROM
+       EMPLOYEE;
+-- 이메일에 0이 들어가는 사원들의 총 급여합
+-- 부서코드가 D5인 친구들만
+SELECT
+	   SUM(SALARY)
+  FROM
+       EMPLOYEE
+ WHERE
+       EMAIL LIKE '%0%'
+   AND
+       DEPT_CODE = 'D5';
+
+--------------------------------------------------------
+-- 2. AVG(숫자타입) : 해당 컬럼값들의 평균값을 구해서 반환
+-- 전체사원들의 그여 평균구하기
+SELECT
+  	   AVG(SALARY) -- 3131140.86956521739130434782608695652174
+  	 , ROUND(AVG(SALARY)) -- 3,131,141
+  FROM 
+       EMPLOYEE;
+
+--3. MIN(ANY) : 해당 컬럼값들 중 작은 값 반환
+SELECT
+	    MIN(SALARY) "제일 작은 급여" -- 0
+	  , MIN(EMP_NAME) "제일 이름이 빠른사람" -- 강병준
+	  , MIN(HIRE_DATE) "제일 빠른 입사일" -- 2000-12-29 00:00:00.000
+  FROM
+        EMPLOYEE;
+
+--4. MAX(ANY) : 해당 컬럼값들 중 가장 큰 값 반환
+SELECT
+  	   MAX(SALARY) "가장 높은 급여"
+  	 , MAX(EMP_NAME) "가장 느린 이름"
+  	 , MAX(HIRE_DATE) "가장 늦은 입사일"
+  FROM
+ 	   EMPLOYEE;
+
+
+-- 5. COUNT(*/ 컬럼명 / DISTINCT 컬럼명) : 행 개수 세서 반환
+SELECT * FROM EMPLOYEE;
+-- COUNT(*) :조회 결과에 해당하는 모든 행 개수를 다 세서 반환
+SELECT
+       COUNT(*) -- 23
+  FROM
+  	   EMPLOYEE;
+
+-- 보너스를 받는 사원의 수
+-- COUNT(컬럼명) : 제시한 컬럼값이 NULL이 아닌 행만 개수를 세서 반환
+SELECT 
+       COUNT(BONUS)
+  FROM
+       EMPLOYEE; --9
+
+
+SELECT
+       COUNT(*)
+  FROM    
+       EMPLOYEE
+ WHERE
+       BONUS IS NOT NULL;--9
+       
+-- 현재 사원들이 속해있는 부서 개수
+-- COUNT(DISTINCT 컬럼명) : 제시한 해당 컬럼값이 중복값이 존재할 경우 하나로만 세서 반환
+SELECT
+  	   COUNT(DISTINCT DEPT_CODE)
+  FROM
+  	   EMPLOYEE; --6
+  	   
+ 
+
