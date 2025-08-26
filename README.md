@@ -49,9 +49,11 @@
       - **MIN(ANY)** ⭐
       - **MAX(ANY)** ⭐
       - **COUNT(*'/ 컬럼명 / DISTINCT 컬럼명)** ⭐
+  ---
   - 03_GRROUP BY절
     - HAVING 절
     - **실행 순서** ⭐
+  ---
   - **04_JOIN** ⭐⭐⭐
 ---
 
