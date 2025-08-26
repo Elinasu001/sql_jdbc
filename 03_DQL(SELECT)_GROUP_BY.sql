@@ -138,3 +138,30 @@ HAVING
   6: ORDER BY	정렬기준으로 사용할 컬럼명 / 함수식 / 별칭 / 컬럼 순번
 */
 
+-- 정리정리: EMPLOYEE 테이블로부터 각 직급(JOB_CODE)별 총 급여합이 1000만원 이상인 직급의
+-- 직급코드, 급여합을 조회 / 단, 직급코드 J6인 그룹은 제외
+SELECT
+       SUM(SALARY) -- 18280000 
+     , JOB_CODE -- J5
+  FROM 
+       EMPLOYEE
+ WHERE 
+       JOB_CODE != 'J6'
+ GROUP
+    BY
+       JOB_CODE
+HAVING
+       SUM(SALARY) >= 10000000;
+
+
+SELECT DEPT_CODE, BONUS FROM EMPLOYEE;
+-- 보너스를 받는 사원이 없는 부서코드만 조회
+SELECT
+ 	   DEPT_CODE
+  FROM 
+       EMPLOYEE
+ GROUP
+    BY
+       DEPT_CODE
+HAVING
+       COUNT(BONUS) = 0;
