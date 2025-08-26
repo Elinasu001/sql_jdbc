@@ -390,9 +390,190 @@ SELECT
        SYSDATE -- 2025-08-26 10:40:51.000
      , SYSTIMESTAMP -- 2025-08-26 10:40:51.787 +0900
   FROM 
-       DUAL;      
+       DUAL;   
+
+
+-- MONTHS_BETWEEN(DATE1, DATE2) : 두 날짜사이의 개월 수 반환(NUMBER)
+-- DATE2를 너무 멀게 잡아 버리면 음수가 나올수 있음
+-- EMPLOYEE 테이블로부터 각 사원 사원명, 고용일로부터 근무일수, 근무개월 수 조회
+SELECT
+       EMP_NAME
+     , FLOOR(SYSDATE - HIRE_DATE) || '일' AS "근무일수"
+     , FLOOR(MONTHS_BETWEEN(SYSDATE, HIRE_DATE)) || '개월' AS "개월수"
+  FROM
+       EMPLOYEE; -- 이승철 4584일 150개월
+
+
+-- ADD_MONTHS(DATE, NUMBER) : 특정날짜에 해당 숫자만큼의 개월 수를 더한 날짜(DATE로 반환)
+SELECT
+       ADD_MONTHS(SYSDATE, 4)
+  FROM
+       DUAL;-- 2025-12-26 10:49:31.000
+
+       
+       
+-- NEXT_DAY(DATE, 요일) : 특정날짜에서 가장 가까운 요일을 찾아 그 날짜를 반환
+SELECT
+       NEXT_DAY(SYSDATE, '금요일') --2025-08-29 11:04:14.000
+     , NEXT_DAY(SYSDATE, '금') -- 2025-08-29 11:05:37.000
+     , NEXT_DAY(SYSDATE, 6) -- 1 : 일요일, 2: 월요일, 3 : 화요일 ,,, 7 : 토요일
+  FROM
+       DUAL; --2025-08-29 11:04:14.000
+            
+             
+       
+       
+       
+       
+-- 언어 변경 ALTER SESSION SET NLS_LANGUAGE = AMERICAL // KOREAN
+
+           
+       
+-- LAST_DATY(DATE) 날짜를 받아서 해당 날짜가 있는 달의 마지막날짜를 반환
+SELECT
+       LAST_DAY(SYSDATE) -- 2025-08-31 11:07:04.000
+  FROM
+       DUAL;
+
+
+--------------------------------------------------------
+/*
+   ★★★★★ 활용도가 높다 ★★★★★
+	EXTRACT : 년도 또는 월 또는 일정보를 추출해서 반환(NUMBER타입)
+	- EXTRACT(YEAR FROM DATE) : 년도만 추출
+	- EXTRACT(MONTH FROM DATE) : 월만 추출
+	- EXTRACT(DAY FROM DATE) : 일만 추출
+*/
+
+-- EMPLOYEE 테이블에서 사원명 입사년도 입사월 입사일
+SELECT 
+       EMP_NAME
+     , EXTRACT(YEAR FROM HIRE_DATE) AS "년도"
+     , EXTRACT(MONTH FROM HIRE_DATE) AS "월"
+     , EXTRACT(DAY FROM HIRE_DATE) AS "일"
+     , EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM HIRE_DATE) -- 현재날짜 - 고용날짜
+  FROM
+       EMPLOYEE
+ ORDER 
+    BY
+       "년도", "월", "일";
+--------------------------------------------------------
+/*
+	< 형변환 함수>
+	
+	NUMBER / DATE => CHARACTER
+	
+	- TO_CHAR(NUMBER/DATE, 포맷) : 숫자 또는 날짜 데이터를 문자데이터타입으로 반환
+*/
+SELECT
+       1234 -- 1,234
+     , TO_CHAR(1234) -- 1234
+     , TO_CHAR(1234, '00000') -- 자리수보다 큰 공간을 0으로 채움 -- 01234
+     , TO_CHAR(1234, '99999') -- 자리수보다 큰 공간을 공백문자로 채움 -- 1234
+     , TO_CHAR(1234, 'L00000') -- 설정된 나라 (LOCAL)의 화폐단위 -- ￦01234
+     , TO_CHAR(1234, '$99999') --  $1234
+     , TO_CHAR(12341234, 'L999,999,999,999,999') -- 쉼표 넣고 싶을 경우 -- ￦12,341,234
+  FROM
+       DUAL;
+--------------------------------------------------------
+-- DATE(년월일시분초) => CHARACTER -- 게시글 작성 때 많이 사용
+SELECT
+       SYSDATE -- 2025-08-26 11:19:25.000
+     , TO_CHAR(SYSDATE) -- 25/08/26
+     , TO_CHAR(SYSDATE, 'YYYY-MM-DD') -- == JAVA SIMPLEDATEFORMAT -- 2025-08-26
+     , TO_CHAR(SYSDATE, 'PM HH:MI:SS') -- PM 오전 / 오후 출력 -- 오전 11:20:34
+     , TO_CHAR(SYSDATE, 'HH24:MI:SS') -- 24시간 표기형식 -- 11:21:18
+     , TO_CHAR(SYSDATE, 'MON DY, YYYY') -- 월 요일 년도 --8월  화, 2025 
+  FROM
+       DUAL;
+--------------------------------------------------------
+-- 년도로 쓸 수 있느 포맷 Y2K문제
+-- RR표기 은 0 ~49 : 2000년대, 50 ~99 : 1900년대
+SELECT 
+	   TO_CHAR(SYSDATE, 'YYYY') -- 2025
+	 , TO_CHAR(SYSDATE, 'RRRR') -- 2025
+	 , TO_CHAR(TO_DATE('26-95', 'DD-YY'), 'YYYY') -- 2095
+	 , TO_CHAR(TO_DATE('26-95', 'DD-RR'), 'YYYY') -- 1995
+	 , TO_CHAR(SYSDATE, 'YEAR') -- TWENTY TWENTY-FIVE
+  FROM
+       DUAL;
+
+-- 월에 쓸수이는 포맷
+SELECT
+       TO_CHAR(SYSDATE, 'MM') -- 08
+     , TO_CHAR(SYSDATE, 'MON') -- 8월
+     , TO_CHAR(SYSDATE, 'MONTH') -- 8월 
+     , TO_CHAR(SYSDATE, 'RM') -- VIII
+  FROM
+       DUAL;
+
+-- 일에 쓸 수 있는 포맷
+SELECT
+       TO_CHAR(SYSDATE, 'DD') -- 26
+     , TO_CHAR(SYSDATE, 'D') -- 3 (화요일)
+     , TO_CHAR(SYSDATE, 'DDD') -- 238 (1월 1일로부터 며칠이 지났는지)
+  FROM 
+       DUAL;
+-- DD : 한달기준
+-- D : 일주일기준(일요일부터)
+-- DDD : 일년 기준(1월 1일부터)
+
+SELECT
+       TO_CHAR(SYSDATE, 'DAY') -- 화요일
+     , TO_CHAR(SYSDATE, 'DY') -- 화
+  FROM      
+       DUAL;
+-- 날짜 예쁘게 넣고 싶을 경우
+SELECT 
+       EMP_NAME
+     , TO_CHAR(HIRE_DATE, 'YYYY MM DD DY') -- 2013 02 06 수
+     , TO_CHAR(HIRE_DATE , 'YYYY"년" MM"월" DD"일" (DY)') -- 2013년 02월 06일 (수)
+  FROM 
+       EMPLOYEE;
+--------------------------------------------------------
+/*
+	NUMBER / CHARACTER => DATE
+	
+	-- 전달할 때 숫자 또는 문자인데 받을 때는 DATE로 변화해서 저장해줘야 한다.
+	- TO_DATE(NUMBER, CHARACTER, 포맷) : 숫자/문자를 날짜로 변환(DATE로 변환)
+
+*/
+SELECT 
+       20250826 -- 20250826
+     , TO_DATE(20250826) -- 2025-08-26 00:00:00.000
+     , TO_DATE('001212') -- 2000-12-12 00:00:00.000
+     , TO_DATE('980607') -- 1998-06-07 00:00:00.000
+     , TO_DATE('980607', 'YYMMDD') -- 2000-12-12 00:00:00.000
+  FROM   
+       DUAL;
+
+--------------------------------------------------------
+/*
+	CHARACTER => NUMBER
+	
+	- TO_NUMBER(CHARACTER, 포맷) : 문자를 숫자형으로 변환(NUMBER로 변환)
+*/
+SELECT
+       '01234' -- 01234
+	 , TO_NUMBER('01234') -- 1,234
+  FROM
+		DUAL;
+
+SELECT 
+       123 + 456 -- 579
+       --'123' + '456' -- ERROR
+  FROM
+       DUAL;
+
+SELECT 
+       --'11,000' + '20,000' --불가능
+        TO_NUMBER('44,000', '99,999') + TO_NUMBER('20,000', '99,999') -- 64000
+  FROM
+        DUAL;
 --------------------------------------------------------
 /*
 	
 
 */
+    
+      
