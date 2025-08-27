@@ -205,8 +205,6 @@ SELECT
 	   JOB J ON (E.JOB_CODE = J.JOB_CODE);
 
 
-
-
 -- USING 구문이용)컬럼명이 동일할 경우 사용이 가능하며 동등비교연산자를 기술하지 않음
 SELECT
        EMP_NAME
@@ -262,7 +260,259 @@ SELECT
 
 -- EQUAL JOIN / INNER JOIN : 일치하지 않는 행은 애초에 ResultSet에 포함시키지 않음
 ------------------------------------------------------------------------
+/*
+	2. 포괄조인 / 외부조인 (OUTER JOIN)
+	
+	테이블간의 JOIN 시 일치하지 않는 행동 포함시켜서 ResultSet 반환
+	단, 반드시 LEFT / RIGTH 를 기저해줘야 함! (기준 테이블을 선택해야함)
+	
+*/
 
+-- EMPLOYEE 테이블에 존재하는 "모든" 사원의 사원명, 부서명 조회
+-- INNER JOIN
+SELECT
+       EMP_NAME
+     , DEPT_TITLE
+  FROM
+       EMPLOYEE
+--  INNER
+  JOIN
+       DEPARTMENT ON (DEPT_CODE  = DEPT_ID);
+-- EMPLOYEE 테이블에서 DEPT_CODE가 NULL인 두 명의 사원은 조회 X
+-- DEPARTEMT 테이블에서 부서에 배정된 사원이 없는 부서(D3, D4, D7) 조회 X
+
+
+-- 1) LEFT[ OUTER ] JOIN : 두 테이블 중 왼편에 기술한 테이블을 기준으로 JOIN
+-- 조건과는 상관없이 외편에 기술한 테이블의 데이터는 전부 조회(일치하는 값을 못찾더라도 조회)
+--> ANSI
+-- JOIN 기준으로 왼쪽에 있는 테이블을 조건에 맞지 않더라도 EMPLOYEE 다 조회 (NULL 포함)
+SELECT
+	   EMP_NAME
+	 , DEPT_TITLE
+  FROM
+       EMPLOYEE
+  LEFT
+-- OUTER LEFT가 붙으면 OUTER 생략 O
+  JOIN 
+       DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+
+-----EMPLOYEE : EMP_NAME, DEPARTMENT : DEPT_TITL
+--> ORACLE
+-- 기준으로 했던 테이블에서 기준으로 안 삼고 싶던 코드는 + 해준다 
+SELECT
+        EMP_NAME
+     ,  DEPT_TITLE -- NULL
+  FROM
+        EMPLOYEE
+      , DEPARTMENT
+  WHERE
+        DEPT_CODE = DEPT_ID(+);
+-- 기준으로 삼지 않을 테이블의 컬럼에 (+)를 해준다(이럴 경우 NULL 값이 들어간다.)
+
+
+-- 2) RIGHT [ OUTER ] JOIN : 두 테이블 중 오른편에 기술한 테이블을 기준으로 JOIN
+-- 일치하는 컬럼이 존재하지 않더라도 오른쪽 테이블의 데이터는 무조건 다 조회
+--> ANSI
+SELECT
+       EMP_NAME -- NULL
+     , DEPT_TITLE
+  FROM
+       EMPLOYEE
+ RIGHT
+  JOIN
+       DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+
+--> ORACLE
+SELECT
+       EMP_NAME
+     , DEPT_TITLE
+ FROM
+       EMPLOYEE
+     , DEPARTMENT
+ WHERE
+       DEPT_CODE(+) = DEPT_ID;
+
+-- 3) FULL [ OUTER ] JOIN : 두 테이블 가진 모든 행을 조회할 수 있는 조인
+--> ANSI 
+SELECT
+       EMP_NAME
+     , DEPT_TITLE
+  FROM 
+       EMPLOYEE
+  FULL
+ OUTER
+  JOIN
+        DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+
+
+--> ORACLE ( X ) - 오라클 전체 외부 조인은 안됨.
+SELECT
+       EMP_NAME
+     , DEPT_TITLE
+  FROM
+       EMPLOYEE
+     , DEPARTMENT
+ WHERE
+       DEPT_CODE(+) = DEPT_ID(+); -- ERROR : outer-join된 테이블은 1개만 지정할 수 있습니다
+       
+------------------------------------------------------------------------
+/*
+    _ 사용 안함 과부하과부하과부하과부하과부하!!
+	3. 카테시안 곱(CARTESIAN PRODUCT) /  교차조인(CROSS JOIN) 
+	모든 테이블의 각 행동을 서로서로 매핑해서 조회된(곱집합) *** 사용금지 문법
+	
+	두 테이블의 행들이 곱해진 조합 뽑아냄 => 데이터 많을수록 방대한 행이 생겨남
+	=> 과부하의 위험!!!!
+*/ 
+--> ORACLE
+SELECT EMP_NAME, DEPT_TITLE FROM EMPLOYEE, DEPARTMENT;
+--                                  23         9
+--> ANSI
+SELECT EMP_NAME, DEPT_TITLE FROM EMPLOYEE CROSS JOIN DEPARTMENT;
+
+------------------------------------------------------------------------
+/*
+	4. 비등가 조인(NON EQUAL JOIN)
+	'=' 를 사용하지 않는 조인
+	
+	컬럼값을 비교하는 경우가 아니라 "범위"에 포함되는 내용을 매칭
+*/ 
+
+-- EMPLOYEE 테이블로부터 사원명, 급여
+SELECT
+ 	   EMP_NAME
+ 	 , SALARY
+  FROM
+       EMPLOYEE;
+
+SELECT * FROM SAL_GRADE;
+
+--> ORACLE
+SELECT
+       EMP_NAME
+     , SALARY
+     , SAL_GRADE.SAL_LEVEL
+  FROM
+       EMPLOYEE
+     , SAL_GRADE
+ WHERE
+       SALARY BETWEEN MIN_SAL AND MAX_SAL;
+
+--> ANSI
+SELECT
+       EMP_NAME
+     , SALARY
+     , SAL_GRADE.SAL_LEVEL
+  FROM
+       EMPLOYEE
+  JOIN
+       SAL_GRADE ON (SALARY BETWEEN MIN_SAL AND MAX_SAL);
+
+------------------------------------------------------------------------
+/*
+	5. 자체조인 (SELF JOIN) _ 팀에서 한명 정도 사용할 수도 있음.
+	
+	같은 테이블을 다시 한 번 조인하는 경우
+	자기자신의 테이블과 조인을 맺음
+*/ 
+
+SELECT
+  	   EMP_ID "사원 번호"
+     , EMP_NAME "사원 이름"
+     , PHONE "전화번호"
+     , MANAGER_ID "사수 사번"
+  FROM
+       EMPLOYEE;
+-- EMPLOYEE 에 있는 사수가 있는 사람들은 사수의 정보를 같이 보고 싶을 경우 사원의 정보와 사수의 정보를 resultSet에서 같이 보고 싶음
+SELECT EMP_ID, EMP_NAME, PHONE, MANAGER_ID FROM EMPLOYEE;
+SELECT EMP_ID, EMP_NAME, PHONE FROM EMPLOYEE;
+
+--> ORACLE
+-- 사원사번, 사원명, 사원 폰번호, 사수번호
+-- 사수사번, 사수명, 사수 폰번호
+SELECT
+       E.EMP_ID, E.EMP_NAME, E.PHONE, E.MANAGER_ID -- 사수 번호 없는 사람도 나오려면 +
+     , M.EMP_ID, M.EMP_NAME, M.PHONE
+  FROM
+   	   EMPLOYEE E, -- 기준
+   	   EMPLOYEE M
+ WHERE
+	   E.MANAGER_ID  = M.EMP_ID(+);
+
+--> ANSI
+SELECT
+ 	   E.EMP_ID, E.EMP_NAME, E.PHONE, E.MANAGER_ID
+ 	 , M.EMP_ID, M.EMP_NAME, M.PHONE
+  FROM
+       EMPLOYEE E
+  LEFT -- E는 다 나와야하니 적용
+  JOIN 
+       EMPLOYEE M ON (E.MANAGER_ID = M.EMP_ID);
+
+------------------------------------------------------------------------
+/*
+	< 다중 JOIN >
+*/
+-- 사원명 + 부서명 + 직급명 + 지역명(LOCAL_NAME)
+-- 4개 전부 다른 테이블에 있음
+SELECT * FROM EMPLOYEE; 	-- EMP_NAME		DEPT_CODE 	JOB_CODE
+SELECT * FROM DEPARTMENT; 	-- DEPT_TITLE	DEPT_ID					LOCATION_ID
+SELECT * FROM JOB;			-- JOB_NAME				  	JOB_CODE
+SELECT * FROM LOCATION;		-- LOCAL_NAME             				LOCAL_CODE
+
+-- EMP_NAME, DEPT_TITLE, JOB_NAME, LOCAL_NAME
+--> ANSI 구문
+SELECT 
+	   EMP_NAME
+	 , DEPT_TITLE
+	 , JOB_NAME
+	 , LOCAL_NAME
+  FROM
+       EMPLOYEE 
+  LEFT -- 왼쪽 기준 NULL 포함
+  JOIN
+	   DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+  JOIN 
+  	   JOB USING(JOB_CODE)
+  LEFT -- 왼쪽 기준 NULL 포함
+  JOIN
+       LOCATION ON (LOCATION_ID = LOCAL_CODE);
+
+--> ORACLE
+SELECT
+	   EMP_NAME
+	 , DEPT_TITLE
+	 , JOB_NAME
+	 , LOCAL_NAME
+  FROM
+       EMPLOYEE E
+     , DEPARTMENT
+     , JOB J
+     , LOCATION
+ WHERE
+       DEPT_CODE = DEPT_ID(+)
+   AND
+       LOCATION_ID = LOCAL_CODE(+)
+   AND 
+       E.JOB_CODE = J.JOB_CODE;
+
+
+------------------------------------------------------------------------
+/*
+	< 집합 연산자 SET OPERATOR >
+	
+	여러 개의 쿼리문을 가지고 하나의 쿼리문으로 만드는 연산자
+	
+	- UNION : 합집합 (두 쿼리문의 수행 결과값을 더한 후 중복되는 부분을 제거)
+	- INTERSECT : 교집합(두 쿼리문의 수행 결과값 중 중복된 부분)
+	- MINUS : 차집합(선행 쿼리문 결과값 빼기 후행 쿼리문의 결과값을 한 결과)
+	
+	
+	  ★★★
+	- UNION ALL : 합집합의 결과에 교집합을 더한 개념
+	(두 쿼리문을 수행한 결과값을 무조건 더함. 합집합에서 중복 제거를 하지 않는 것)
+	=> 중복행이 여러 번 조회 될 수 있다.
+*/
 
 
 
