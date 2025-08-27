@@ -503,31 +503,177 @@ SELECT
 	
 	여러 개의 쿼리문을 가지고 하나의 쿼리문으로 만드는 연산자
 	
-	- UNION : 합집합 (두 쿼리문의 수행 결과값을 더한 후 중복되는 부분을 제거)
+	- UNION : 합집합 (두 쿼리문의 수행 결과값을 더한 후 중복되는 부분을 제거) 
 	- INTERSECT : 교집합(두 쿼리문의 수행 결과값 중 중복된 부분)
 	- MINUS : 차집합(선행 쿼리문 결과값 빼기 후행 쿼리문의 결과값을 한 결과)
+	=> WHERE로 대체 가능
 	
-	
-	  ★★★
+	  ★★★★★★
 	- UNION ALL : 합집합의 결과에 교집합을 더한 개념
-	(두 쿼리문을 수행한 결과값을 무조건 더함. 합집합에서 중복 제거를 하지 않는 것)
+  	(두 쿼리문을 수행한 결과값을 무조건 더함. 합집합에서 중복 제거를 하지 않는 것)
 	=> 중복행이 여러 번 조회 될 수 있다.
 */
 
+-- 1. UNION
+-- 부서코드가 D5인 사원들 조회
+SELECT
+       EMP_NAME
+     , DEPT_CODE
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+       DEPT_CODE = 'D5'; -- 박세혁, 박수현, 박채형, 박현준, 배주영, 유성현 - 6행
+       
+-- 급여가 300만원 초과인 사람들
+SELECT
+ 	   EMP_NAME
+ 	 , DEPT_CODE
+ 	 , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+ 	   SALARY > 3000000; -- 이승철, 강병준, 강현성, 박성민, 박현준, 유성현, 채정민, 신국희 - 8행
 
 
+-- UNION O
+SELECT
+       EMP_NAME
+     , DEPT_CODE
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+       DEPT_CODE = 'D5'
+ UNION
+SELECT
+ 	   EMP_NAME
+ 	 , DEPT_CODE
+ 	 , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+ 	   SALARY > 3000000;
+-- UNION 쓰려면 SELECT 절에 기술하는 컬럼이 같아야함
+-- 같음 UNION 쓸 바에 컬럼이 같다면 OR 사용
+-- UNION X
+SELECT
+ 	   EMP_NAME
+ 	 , DEPT_CODE
+ 	 , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+ 	   DEPT_CODE = 'D5'
+    OR
+       SALARY >  3000000;
 
+-- 부서코드가 D1, D2, D5인 부서의 급여 합계를 조회하고 싶다.
+-- UNION O
+SELECT SUM(SALARY)
+  FROM EMPLOYEE
+ WHERE DEPT_CODE  = 'D1'
+ UNION
+SELECT SUM(SALARY)
+  FROM EMPLOYEE
+ WHERE DEPT_CODE  = 'D2'
+ UNION
+SELECT SUM(SALARY)
+  FROM EMPLOYEE
+ WHERE DEPT_CODE  = 'D5';
+-- UNION X
+SELECT SUM(SALARY)
+  FROM EMPLOYEE
+ WHERE DEPT_CODE IN ('D1', 'D2', 'D5')
+GROUP BY DEPT_CODE;
 
+------------------------------------------------------------------------
+-- 2. UNION ALL : 여러 개의 쿼리 결과를 무조건 합치는 연산자(중복 가능) ★★★★★★
+-- 중복 지원 불가 또는 중복 당첨 불가 할경우 사용
+SELECT
+	   EMP_NAME
+	 , DEPT_CODE
+     , SALARY
+  FROM 
+       EMPLOYEE
+ WHERE
+       DEPT_CODE = 'D5'
+ UNION 
+   ALL
+SELECT
+	   EMP_NAME
+     , DEPT_CODE
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+       SALARY >  3000000;
 
+------------------------------------------------------------------------
+-- 3. 교집합 INTERSECT (앞에 쿼리랑 뒤에 쿼리 겹치는 것만 조회)
+-- INTERSECT O
+SELECT
+	   EMP_NAME
+	 , DEPT_CODE
+     , SALARY
+  FROM 
+       EMPLOYEE
+ WHERE
+       DEPT_CODE = 'D5'
+INTERSECT
+SELECT
+	   EMP_NAME
+     , DEPT_CODE
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+       SALARY >  3000000;
 
+-- INTERSECT X
+SELECT
+	   EMP_NAME
+     , DEPT_CODE
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+ 	   DEPT_CODE = 'D5'
+   AND
+       SALARY >  3000000;
 
+------------------------------------------------------------------------
+--4. MINUS (차집합 - 선행쿼리 결과에서 후행 쿼리 결과를 뺀 나머지) - 중복 된 걸 뺸 나머지
+-- MINUS O
+SELECT
+	   EMP_NAME
+	 , DEPT_CODE
+     , SALARY
+  FROM 
+       EMPLOYEE
+ WHERE
+       DEPT_CODE = 'D5'
+ MINUS
+SELECT
+	   EMP_NAME
+     , DEPT_CODE
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+       SALARY >  3000000;
 
-
-
-
-
-
-
+-- MINUS X
+SELECT
+	   EMP_NAME
+	 , DEPT_CODE
+     , SALARY
+  FROM 
+       EMPLOYEE
+ WHERE
+       DEPT_CODE = 'D5'
+   AND
+       SALARY <=  3000000; -- 반대로 사용하면 됨.
 
 
 
