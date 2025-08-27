@@ -55,6 +55,15 @@
     - **실행 순서** ⭐
   ---
   - **04_JOIN** ⭐⭐⭐
+    - ORACLE / ANSI
+    - 등가조인(EQUAL JOIN) / **내부조인(INNER JOIN)**
+    - 포괄조인 / **외부조인 (OUTER JOIN)** + LEFT / RIGTH
+    - 카테시안 곱(CARTESIAN PRODUCT) /  교차조인(CROSS JOIN)
+    - 비등가 조인(NON EQUAL JOIN)
+    - 자체조인 (SELF JOIN)
+  ---
+  - 05_SUB QUERY
+  
 ---
 
 ---
