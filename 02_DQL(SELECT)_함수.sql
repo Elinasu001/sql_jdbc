@@ -310,7 +310,11 @@ SELECT
 /*
    MOD
    
+<<<<<<< HEAD
    - MOD(NUMBER1, NUMBER2)
+=======
+   - MOD(NUMBER1, NUMBER2) : 두 수를 나눈 나머지값을 반환
+>>>>>>> 1b72d8b (re)
    
    %를 모듈로 연산자
    
