@@ -11,62 +11,70 @@
 ## 📘 학습 내용 요약
 ---
 DQL(SELECT)
-  - 01_기본문법
-    - 문자열관련함수
-    - 산술연산
-    - DATE
-    - 컬럼명에 별칭 부여하기
-    - 리터럴
-    - DISTINCT
-    - WHERE 절
-    - 논리연산자
-    - BETWEEN AND>  / <NOT BETWEEN AND
-    - LIKE '특정패턴'
-    - IS NULL / IS NOT NULL
-    - 연결연산자 ||
-    - IN
-    - 연산자 우선순위
-    - **ORDER BY** ⭐
-  ---
-  - 02_FUNCTION 함수
-    - 단일행 함수
-      - 문자열 관련 함수
-        - LENGTH / LENGTHB
-        - INSTR(STR)
-        - SUBSTR(STR, POSITION, LENGTH)
-        - LPAD(LEFTPADDING) / RPAD(RIGHTPADDING)
-        - LTRIM / RTRIM (STR, 제거하고자하는 문자)
-        - TRIM(BOTH / LEADING / TRAILRING '제거하고자하는문자' FROM STR)
-        - LOWER(STR)/UPPER(STR)/INITCAP(STR)
-        - CONCAT(STR1, STR2)
-        - REPLACE(STR, 찾을문자, 바꿀문자)
-      - 숫자 관련 함수
-      - 날짜 관련 함수
-      - 형 변환 함수
-      - NULL 처리 함수
-    - 그룹함수
-      - **SUM(숫자타입)** ⭐
-      - **AVG(숫자타입)** ⭐
-      - **MIN(ANY)** ⭐
-      - **MAX(ANY)** ⭐
-      - **COUNT(*'/ 컬럼명 / DISTINCT 컬럼명)** ⭐
-  ---
-  - 03_GRROUP BY절
-    - HAVING 절
-    - **실행 순서** ⭐
-  ---
-  - **04_JOIN** ⭐⭐⭐
-    - ORACLE / ANSI
-    - 등가조인(EQUAL JOIN) / **내부조인(INNER JOIN)**
-    - 포괄조인 / **외부조인 (OUTER JOIN)** + LEFT / RIGTH
-    - 카테시안 곱(CARTESIAN PRODUCT) /  교차조인(CROSS JOIN)
-    - 비등가 조인(NON EQUAL JOIN)
-    - 자체조인 (SELF JOIN)
-  ---
-  - 05_SUB QUERY
-  
+- DQL(SELECT) 01_기본문법
+  - 문자열관련함수
+  - 산술연산
+  - DATE
+  - 컬럼명에 별칭 부여하기
+  - 리터럴
+  - DISTINCT
+  - WHERE 절
+  - 논리연산자
+  - BETWEEN AND>  / <NOT BETWEEN AND
+  - LIKE '특정패턴'
+  - IS NULL / IS NOT NULL
+  - 연결연산자 ||
+  - IN
+  - 연산자 우선순위
+  - **ORDER BY** ⭐
+---
+- DQL(SELECT) 02_FUNCTION 함수
+  - 단일행 함수
+    - 문자열 관련 함수
+      - LENGTH / LENGTHB
+      - INSTR(STR)
+      - SUBSTR(STR, POSITION, LENGTH)
+      - LPAD(LEFTPADDING) / RPAD(RIGHTPADDING)
+      - LTRIM / RTRIM (STR, 제거하고자하는 문자)
+      - TRIM(BOTH / LEADING / TRAILRING '제거하고자하는문자' FROM STR)
+      - LOWER(STR)/UPPER(STR)/INITCAP(STR)
+      - CONCAT(STR1, STR2)
+      - REPLACE(STR, 찾을문자, 바꿀문자)
+    - 숫자 관련 함수
+    - 날짜 관련 함수
+    - 형 변환 함수
+    - NULL 처리 함수
+  - 그룹함수
+    - **SUM(숫자타입)** ⭐
+    - **AVG(숫자타입)** ⭐
+    - **MIN(ANY)** ⭐
+    - **MAX(ANY)** ⭐
+    - **COUNT(*'/ 컬럼명 / DISTINCT 컬럼명)** ⭐
+---
+- DQL(SELECT) 03_GRROUP BY절
+  - HAVING 절
+  - **실행 순서** ⭐
+---
+- **04_JOIN** ⭐⭐⭐
+  - ORACLE / ANSI
+  - 등가조인(EQUAL JOIN) / **내부조인(INNER JOIN)**
+  - 포괄조인 / **외부조인 (OUTER JOIN)** + LEFT / RIGTH
+  - 카테시안 곱(CARTESIAN PRODUCT) /  교차조인(CROSS JOIN)
+  - 비등가 조인(NON EQUAL JOIN)
+  - 자체조인 (SELF JOIN)
+---
+- DQL(SELECT) 05_SUB QUERY
+  - 단일행 [단일열] 서브쿼리
+  - 다중행 [단일열] 서브쿼리
+  - [단일열] 다중열 서브쿼리
+  - 다중행 다중열 서브쿼리
+  -** 인라인 뷰(INLINE-VIEW)** ⭐⭐
+  - 스칼라 서브쿼리(Scalar Subquery)
+  - ROWNUM
+  - OFFSET
 ---
 DML(INSERT, UPDATE, DELETE)
+
 ---
 DDL(CREATE, ALTER, DROP)
 ---
