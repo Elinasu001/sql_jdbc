@@ -18,7 +18,7 @@
 	- 트랜잭션의 대상이 되는 SQL : INSERT, UPDATE, DELETE
 	
 	
-	COMMIT, ROLLBACK, SAVEPOINT
+	COMMIT, ROLLBACK(트랜잭션 취소), SAVEPOINT
 */
 -- 복사
 CREATE TABLE EMP_COPY
@@ -49,9 +49,19 @@ DELETE
 ROLLBACK;					--> TRANSACTION 전체 날림
 
 --> 실질적으로 데이터베이스는 SELECT랑 연관이 없음
+-------------------------------------------------------------------------------
 
+SELECT * FROM EMP_COPY;  -- 트랜잭션 아직 안생김
 
+DELETE FROM EMP_COPY WHERE EMP_ID = 900; --  트랜잭션 생성 + DELETE
 
+UPDATE EMP_COPY SET EMP_NAME = '고길동' WHERE EMP_NAME = '홍길동'; --  + UPDATE
+
+SELECT * FROM EMP_COPY;
+
+COMMIT;-- COMMIT 시 TRANSACTION 올라간 DELETE UPDATE 확정을 지음. == 물리적인 저장장치에 저장
+
+ROLLBACK; 
 
 
 
