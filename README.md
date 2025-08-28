@@ -11,7 +11,8 @@
 ## 📘 학습 내용 요약
 ---
 DQL(SELECT)
-- DQL(SELECT) 01_기본문법
+DDL(DATA QUERY LANGUAGE)
+- 01_기본문법
   - 문자열관련함수
   - 산술연산
   - DATE
@@ -28,7 +29,7 @@ DQL(SELECT)
   - 연산자 우선순위
   - **ORDER BY** ⭐
 ---
-- DQL(SELECT) 02_FUNCTION 함수
+- 02_FUNCTION 함수
   - 단일행 함수
     - 문자열 관련 함수
       - LENGTH / LENGTHB
@@ -51,7 +52,7 @@ DQL(SELECT)
     - **MAX(ANY)** ⭐
     - **COUNT(*'/ 컬럼명 / DISTINCT 컬럼명)** ⭐
 ---
-- DQL(SELECT) 03_GRROUP BY절
+- 03_GRROUP BY절
   - HAVING 절
   - **실행 순서** ⭐
 ---
@@ -63,7 +64,7 @@ DQL(SELECT)
   - 비등가 조인(NON EQUAL JOIN)
   - 자체조인 (SELF JOIN)
 ---
-- DQL(SELECT) 05_SUB QUERY
+- 05_SUB QUERY
   - 단일행 [단일열] 서브쿼리
   - 다중행 [단일열] 서브쿼리
   - [단일열] 다중열 서브쿼리
@@ -74,11 +75,44 @@ DQL(SELECT)
   - OFFSET
 ---
 DML(INSERT, UPDATE, DELETE)
-
+- 06_DML(INSERT, UPDATE, DELETE)
+  - INSERT
+    - INSERT INTO 테이블명 VALUEW (값, 값, 값...)
+    - INSERT INTO 테이블명(컬럼명, 컬럼명, 컬렴명) VALUES(값, 값, 값)
+    - INSERT INTO 테이블명(서브쿼리);
+    - INSERT ALL
+  - UPDATE
+  - DELETE
+  - TRUNCATE
 ---
 DDL(CREATE, ALTER, DROP)
+- 07_DDL(CREATE, ALTER, DROP)
+- DDL(DATA DEFITION LANGUAGE)
+  - CREATE
+    - CREATE TABLE
+    - 자료형
+    - COMMENT ON COLUMN 테이블명.컬럼명 IS '설명'
+    - 제약조건(CONSTRAINT)
+      - NOT NULL
+      - UNIQUE
+      - CHECK
+      - PRIMARY KEY
+      - FOREIGN KEY
+  - DELETE
+    - ON DELETE SET NULL
+    - ON DELETE CASCADE
+  - ALTER
+    - 컬럼 추가 / 수정 / 삭제
+    - 제약조건 추가 / 삭제
+    - 테이블명 / 컬럼명 / 제약조건
+  - DROP
 ---
-TCL(COMMIT, ROLLBACK)
+**TCL(COMMIT, ROLLBACK)** ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+- 08_TCL(COMMIT, ROLLBACK)
+- TCL(TRANSACTION CONTROL LANGUAGE)
+  - COMMIT
+  - ROLLBACK
+  - SAVEPOINT
 ---
 OBJECT(VIEW)
 ---
