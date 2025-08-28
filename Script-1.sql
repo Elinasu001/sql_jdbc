@@ -1,11 +1,11 @@
 -- QUIZ --
 
 -- '한국'에서 근무하는 사원들의 사번, 이름, 부서명, 직급명, 근무 국가명을 조회해주세요!
-SELECT * FROM EMPLOYEE; --															DEPT_CODE(D)	JOB_CODE(J)		
-SELECT * FROM LOCATION; -- NATIONAL_CODE(KO) LOCAL_CODE(L) 
+SELECT * FROM EMPLOYEE; --														DEPT_CODE(D)	JOB_CODE(J)		
+SELECT * FROM LOCATION; -- NATIONAL_CODE(KO)	LOCAL_CODE(L) 
 SELECT * FROM NATIONAL; -- NATIONAL_CODE(KO)					=> NATIONAL_NAME
-SELECT * FROM DEPARTMENT; -- 				 LOCATION_ID(L)							DEPT_ID(D)
-SELECT * FROM JOB;--																				JOB_CODE(J)
+SELECT * FROM DEPARTMENT; -- 				 	LOCATION_ID(L)					DEPT_ID(D)
+SELECT * FROM JOB;--																			JOB_CODE(J)
 
 SELECT
 	   EMP_NO			--EMP
@@ -13,7 +13,7 @@ SELECT
      , DEPT_TITLE		--DE
      , JOB_NAME			--JOB
      , NATIONAL_NAME	--NA
- FROM
+  FROM
        EMPLOYEE
   JOIN
        DEPARTMENT ON (DEPT_CODE = DEPT_ID)
