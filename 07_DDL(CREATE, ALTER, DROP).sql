@@ -408,9 +408,190 @@ DELETE
        
 SELECT * FROM USER_GRADE;
 
+DELETE FROM USER_GRADE WHERE GRADE_CODE = 'G3';
+
+SELECT * FROM USER_GRADE;
+DROP TABLE TB_USER_CHILD;
+
+ROLLBACK;
+---------------------------------------------------------------------
+/*
+	자식테이블 생성 시 외래키 제약조건을 부여하면
+	부모테이블의 데이터를 삭제할 때 자식테이블에서는 처리를 어떻게 할 것인지 옵션 지정 가능
+	
+	기본 설정은 ON DELETE RESTIRCTED(삭제제한)이 설정됨
+*/
+-- 1) ON DELETE SET NULL == 부모 데이터 삭제 시 자식레코드도 NULL값으로 변경
+CREATE TABLE TB_USER_ODSN(
+	USER_NO NUMBER PRIMARY KEY,
+	GRADE_ID CHAR(2),
+	FOREIGN KEY(GRADE_ID) REFERENCES USER_GRADE ON DELETE SET NULL
+);
+
+INSERT INTO TB_USER_ODSN VALUES(1, 'G1');
+INSERT INTO TB_USER_ODSN VALUES(2, 'G2');
+INSERT INTO TB_USER_ODSN VALUES(3, 'G1'); -- (ERROR) G1 PRIMARY KEY 로 중복 불가
+
+SELECT * FROM TB_USER_ODSN;
+
+-- 부모테이블의 GRADE_CODE 가 G1인 행 삭제
+DELETE
+  FROM
+       USER_GRADE
+ WHERE
+       GRADE_CODE = 'G1';
+
+ROLLBACK;      -- 다시 G1 사용해야되니깐 일단 롤백  
+
+-- 2) ON DELETE CASCADE : 부모데이터 삭제 시 데이터를 사용하는 자식 데이터도 같이 삭제
+CREATE TABLE TB_USER_ODC(
+	USER_NO NUMBER PRIMARY KEY,
+	GRADE_ID CHAR(2),
+	FOREIGN KEY(GRADE_ID) REFERENCES USER_GRADE ON DELETE CASCADE
+);
+
+INSERT INTO TB_USER_ODC VALUES(1, 'G1');
+
+SELECT * FROM TB_USER_ODC;-- 1 G1
+
+DELETE FROM USER_GRADE WHERE GRADE_CODE = 'G1';
+
+SELECT * FROM TB_USER_ODC; -- " "  " "
+
+----------------------------------------------------------------------------
+/*
+	2. ALTER
+	
+	객체 구조를 수정하는 구문
+	
+	< 테이블 수정 >
+	
+	ALTER TABLE 테이블명 수정할내용;
+	- 수정할 내용
+	1) 컬럼 추가 / 컬럼 수정 / 컬럼 삭제
+	2) 제약조건 추가 / 삭제 => 제약조건 수정은 X
+	3) 테이블명 / 컬럼명 / 제약조건명
+*/
+CREATE TABLE JOB_COPY
+    AS SELECT * FROM JOB; 
+--> 컬럼들 조회결과의 데이터값들 제약조건은 NOT NULL만 복사가됨
+
+SELECT * FROM JOB_COPY;
+
+-- 1) 컬럼 추가 / 수정 / 삭제
+-- 1_1) 추가(ADD) : ADD 추가할 컬럼명 자료형 DEFAULT 기본값(DEFAULT 생략 가능)
+
+-- LOCATION 테이블 컬럼 추가!
+ALTER TABLE JOB_COPY ADD LOCATION VARCHAR2(10);
+
+-- NULL 값이 아닌 DEFAULT 값으로 채우기!
+ALTER TABLE JOB_COPY ADD LOCATION_NAME VARCHAR2(20) DEFAULT '한국';
+
+SELECT * FROM JOB_COPY;
+
+-- 1_2) 컬럼수정(MODIFY)
+-- 자료형 수정 : ALTER TABLE 테이블명 MODIFY 컬럼명 바꿀데이터타입;
+-- DEFAULT 값 수정 : ALTER TABLE 테이블명 MODIFY 컬럼명 DEFAULT 기본값;
+
+-- JOB_CODE 컬럼 데이터 타입(자료형)은 CHAR(3)로 변경하기
+--ALTER USER 계정명 IDENTIFIED BY 바꾸고싶은비밀번호; --> 내 계정 비밀 번호 바꾸기
+--ALTER USER PSH08 IDENTIFIED BY PSH08123; --> 근데 바꿀 수 있는 권한 없음
+ALTER TABLE JOB_COPY MODIFY JOB_CODE CHAR(3);
+
+-- 하지만 다 되는 건 아님
+-- ALTER TABLE JOB_COPY MODIFY JOB_CODE NUMBER; -- (ERROR)
+-- ALTER TABLE JOB_COPY MODIFY JOB_CODE CHAR(1); -- (ERROR)
+-- 기본적으로 현재 변경하려고 하는 컬럼의 값과 완전히 '다른 타입'이거나 '작은 크기'로는 변경이 불가능함!
+--> 즉, 문자 --> 숫자(X) / 사이즈축소(X) / 확대(O)
+-->        DROP			DROP
+SELECT * FROM JOB_COPY;
+
+-- 수정 시~원하게 해보자
+-- JOB_NAME 컬럼 데이터 타입을 NVARCHAR2(40)
+-- LOCATIN 컬럼 데이터 타입을 NVARCHAR2(40)
+-- LOCATION_NAME 컬럼 기본값을 '미국'
+
+ALTER TABLE JOB_COPY
+MODIFY JOB_NAME NVARCHAR2(40)
+MODIFY LOCATION NVARCHAR2(40)
+MODIFY LOCATION_NAME DEFAULT '미국';
+
+--- 1_3) 컬럼 삭제(DROP COLUMN) : DROP COLUMN 컬럼명
+CREATE TABLE JOB_COPY2
+    AS SELECT * FROM JOB;
+
+ALTER TABLE JOB_COPY2 DROP COLUMN JOB_CODE;
+SELECT * FROM JOB_COPY2; 
 
 
+ALTER TABLE JOB_COPY2 DROP COLUMN JOB_NAME; -- (ERROR) 삭제 단, 최소한 하나의 컬럼이 있어야 삭제 가능
+SELECT * FROM JOB_COPY2;
+CREATE TABLE ABC(
 
+
+);
+--> 테이블은 최소 한 개의 컬럼은 가지고 있어야한다 !!!!.
+---------------------------------------------------------------------------------
+-- 2) 제약조건 추가 / 삭제
+/*
+	테이을 생성한 후 제약조건을 추가 (ADD)
+	
+	- PRIMARY KEY : ADD PRIMARY KEY(컬럼명);
+	- FOREIGN KEY : ADD FOREIGN KEY(컬럼명) REFERENCES 부모테이블명;
+	- CHECK : ADD CHECK(컬럼명);
+	- UNIQUE : ADD UNIQUE(컬럼명);
+	
+	- NOT NULL : MODIFY 컬럼 NOT NULL;
+	
+	제약조건 달려있는 걸 삭제
+	PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK : DROP CONSTRAINT 제약조건명 **제약조건명 모르면 지울 수 없음
+	
+	- NOT NULL : MODIFY 컬럼명 NULL;
+*/
+-- UNIQUE 추가
+ALTER TABLE JOB_COPY 
+  ADD CONSTRAINT JOB_UQ UNIQUE(JOB_NAME);
+
+-- UNIQUE 지우기
+ALTER TABLE JOB_COPY
+ DROP CONSTRAINT JOB_UQ;
+
+---------------------------------------------------------------------------------
+-- 3) 컬럼명 / 제약조건명 / 테이블명 변경 (RENAME)
+
+-- 3_1) 컬럼명 바꾸기 : ALTER TABLE 테이블명 RENAME COLUMN 원래컬럼명 TO 바꿀컬럼명
+ALTER TABLE JOB_COPY RENAME COLUMN LOCATION TO LNAME;
+SELECT * FROM JOB_COPY;
+
+-- 3-2) 테이블명 변경 : ALTER TABLE 테이블명 RENAME 기존테이블명 TO 바꿀테이블명
+ALTER TABLE JOB_COPY2 RENAME TO JOB_COPY3;
+SELECT * FROM JOB_COPY;
+
+---------------------------------------------------------------------------------
+/*
+	3. DROP
+	객체 삭제하기
+*/
+-- 부모테이블
+CREATE TABLE PARENT_TABLE(
+	NO NUMBER PRIMARY KEY
+);
+
+-- 부모테이블 참조하는 자식테이블
+CREATE TABLE CHILD_TABLE(
+	NO NUMBER REFERENCES PARENT_TABLE
+);
+
+INSERT INTO PARENT_TABLE VALUES(1);
+INSERT INTO CHILD_TABLE VALUES(1);
+SELECT * FROM PARENT_TABLE;
+SELECT * FROM CHILD_TABLE;
+
+-- 이럴 경우 두 가지 방법 있음
+--> 1. 자식테이블을 DROP 한 후 부모테이블 DROP
+DROP TABLE PARENT_TABLE;-- 참조되는 기본키가 테이블에 있음
+--> 2. CASCADE CONSTRAINT 로 강제 박살 -- 진짜진짜 지울 때 사용
+DROP TABLE PARENT_TABLE CASCADE CONSTRAINT;
 
 
 
