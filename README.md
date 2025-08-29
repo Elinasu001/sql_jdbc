@@ -115,7 +115,7 @@ DDL(CREATE, ALTER, DROP)
   - SAVEPOINT
 ---
 OBJECT(VIEW)
-- 
+
 ---
 
 ## **JDBC**
