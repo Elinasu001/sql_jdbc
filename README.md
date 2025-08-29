@@ -116,6 +116,11 @@ DDL(CREATE, ALTER, DROP)
 ---
 OBJECT(VIEW)
 ---
+JDBC
+[JAVA (JDBC를 위한 JAVA GITHUB 링크)](https://github.com/Elinasu001/jdbc_workspace.git) + DATABASE
+
+
+---
 🛠 개발 환경
 Oracle Database 18c
 
