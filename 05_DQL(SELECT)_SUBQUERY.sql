@@ -359,6 +359,8 @@ SELECT
 					        EMPLOYEE
 					  WHERE
 					        EMP_NAME IN ('이승철', '선승제'));
+
+
 --- ANY 연산자
 /*       
   	X(컬럼) > ANY(값, 값, 값)
@@ -375,6 +377,7 @@ SELECT * FROM EMPLOYEE;
 -- 대리직급임에도 불구하고 과장보다 급여를 많이 받는 대리가 존재한다!!
 -- 1) 과장들은 얼마를 받고 있느가 _ 오라클
 -- '과장' 
+-- 오라클
 SELECT 
        SALARY
   FROM
@@ -384,8 +387,19 @@ SELECT
        J.JOB_CODE = E.JOB_CODE
    AND   
        JOB_NAME = '과장'; -- 220, 250, 232, 376, 750
+       
+-- ANSI    
+SELECT
+ 	   SALARY
+  FROM
+       EMPLOYEE
+  JOIN
+       JOB USING(JOB_CODE)
+ WHERE
+       JOB_NAME = '과장';
 
 -- 2) 위의 급여보다 높은 급여를 받고 있는 대리의 사원명 직급명, 급여
+-- 오라클
 SELECT 
        EMP_NAME
      , JOB_NAME
@@ -409,6 +423,26 @@ SELECT
 					       JOB_NAME = '과장')
    AND 
        JOB_NAME = '대리';
+-- ANSI
+SELECT
+	   EMP_NAME
+	 , JOB_NAME
+	 , SALARY
+  FROM
+       EMPLOYEE
+  JOIN
+  	   JOB USING(JOB_CODE)
+ WHERE
+       SALARY > ANY(SELECT
+					 	   SALARY
+					  FROM
+					       EMPLOYEE
+					  JOIN
+					       JOB USING(JOB_CODE)
+					 WHERE
+					       JOB_NAME = '과장')
+  AND
+      JOB_NAME = '대리';
  
  -- ALL연산자
  -- 과장직급인데 모든 차장직급의 급여보다 더 많이받는 직원

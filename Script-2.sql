@@ -1,3 +1,4 @@
+--------- INSERT
 CREATE TABLE TB_STUDENT(
 	STUDENT_ID NUMBER PRIMARY KEY,
 	STUDENT_NAME NVARCHAR2(5) NOT NULL,
@@ -15,3 +16,16 @@ VALUES
        );
 COMMIT;
 SELECT * FROM TB_STUDENT;
+
+--------- SELECT
+SELECT
+       STUDENT_ID
+     , STUDENT_NAME
+     , ENROLL_DATE
+ FROM
+       TB_STUDENT
+ORDER
+   BY
+       ENROLL_DATE DESC; -- 순서 기준은 보통 ENROLL_DATE 사용 WHY? 들어온 순서대로 나열하는게 명확!, 최신순
+
+       
