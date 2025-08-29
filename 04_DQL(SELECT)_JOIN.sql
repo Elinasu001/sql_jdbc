@@ -284,6 +284,7 @@ SELECT
 
 -- 1) LEFT[ OUTER ] JOIN : 두 테이블 중 왼편에 기술한 테이블을 기준으로 JOIN
 -- 조건과는 상관없이 외편에 기술한 테이블의 데이터는 전부 조회(일치하는 값을 못찾더라도 조회)
+
 --> ANSI
 -- JOIN 기준으로 왼쪽에 있는 테이블을 조건에 맞지 않더라도 EMPLOYEE 다 조회 (NULL 포함)
 SELECT
@@ -297,6 +298,7 @@ SELECT
        DEPARTMENT ON (DEPT_CODE = DEPT_ID);
 
 -----EMPLOYEE : EMP_NAME, DEPARTMENT : DEPT_TITL
+
 --> ORACLE
 -- 기준으로 했던 테이블에서 기준으로 안 삼고 싶던 코드는 + 해준다 
 SELECT

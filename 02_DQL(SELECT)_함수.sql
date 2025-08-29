@@ -350,7 +350,6 @@ SELECT
   CEIL
   - CEIL(NUMBER) 소수점 아래의 수를 무조건 올림처리해주는 함수
 */
-
 SELECT
        FLOOR(123.45)
   FROM
