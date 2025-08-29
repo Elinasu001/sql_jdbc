@@ -19,7 +19,7 @@ SELECT
   	   EMPLOYEE
  WHERE
        '박세혁' = EMP_NAME;
--- 2) 부서코드가 D5인 사원드르이 사원명 조회
+-- 2) 부서코드가 D5인 사원들이 사원명 조회
 SELECT 
        EMP_NAME
   FROM
@@ -249,7 +249,7 @@ SELECT
 
 --------------------------------------------------
 -- 부서별 급여 합계가 가장 큰 부서의 부서명, 부서코드, 급여합계
--- 1.각 부서별 급여 합계
+-- 1)각 부서별 급여 합계
 SELECT
        SUM(SALARY)
   FROM
@@ -257,7 +257,7 @@ SELECT
  GROUP
 	BY
 	   DEPT_CODE;
--- 2. 부서별 급여합계 중 가장 큰 급여합
+-- 2) 부서별 급여합계 중 가장 큰 급여합
 SELECT
        MAX(SUM(SALARY))
   FROM
