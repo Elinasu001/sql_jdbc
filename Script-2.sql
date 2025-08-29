@@ -28,4 +28,5 @@ ORDER
    BY
        ENROLL_DATE DESC; -- 순서 기준은 보통 ENROLL_DATE 사용 WHY? 들어온 순서대로 나열하는게 명확!, 최신순
 
+ 
        
