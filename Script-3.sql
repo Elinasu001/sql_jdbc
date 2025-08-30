@@ -35,3 +35,34 @@ VALUES
 COMMIT;
 --DROP TABLE EMPLOYEE;
 SELECT * FROM EMPLOYEE;
+-------------------------------------------------------------
+CREATE SEQUENCE SEQ_PLANT
+ START WITH 1;
+
+CREATE TABLE TB_PLANT(
+	PLANT_ID NUMBER PRIMARY KEY,
+    PLANT_NAME NVARCHAR2(30) NOT NULL,
+    PLANT_TYPE NVARCHAR2(30) NOT NULL
+);
+
+INSERT
+  INTO
+       TB_PLANT
+VALUES
+       (
+       SEQ_PLANT.NEXTVAL
+     , '몬스테라'
+     , '열대관엽식물'
+       );
+SELECT * FROM TB_PLANT;
+----------------------------------------------------
+SELECT
+       PLANT_ID
+     , PLANT_NAME
+     , PLANT_TYPE
+ FROM
+      TB_PLANT
+ORDER
+   BY 
+      PLANT_ID;
+
