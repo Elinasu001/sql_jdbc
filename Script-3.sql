@@ -36,6 +36,7 @@ COMMIT;
 --DROP TABLE EMPLOYEE;
 SELECT * FROM EMPLOYEE;
 -------------------------------------------------------------
+---HOMEWORK2---
 CREATE SEQUENCE SEQ_PLANT
  START WITH 1;
 
@@ -66,3 +67,44 @@ ORDER
    BY 
       PLANT_ID;
 
+----------------------------------------------------
+---HOMEWORK3---
+CREATE TABLE TB_EVENT(
+	EVENT_ID NUMBER PRIMARY KEY,
+	TITLE VARCHAR2(255) NOT NULL,
+	DESCRIPTION CLOB,
+	START_DATE DATE NOT NULL,
+	END_DATE DATE NOT NULL,
+	REWARD_POINT NUMBER NOT NULL
+);
+
+CREATE SEQUENCE SEQ_EVENT START WITH 1;
+
+INSERT
+  INTO
+       TB_EVENT
+VALUES
+       (
+       SEQ_EVENT.NEXTVAL
+     , '아침 6시 기상하고 인증하기!'
+     , '매일 아침에 함꼐 일찍 기상하고 더 의미있는 하루를 시작을 같이 만들어가요!'
+     , TO_DATE('2025-09-01','YYYY-MM-DD')
+     , TO_DATE('2025-09-07','YYYY-MM-DD')
+     , 500
+       );
+SELECT * FROM TB_EVENT;
+----------------------
+SELECT
+       EVENT_ID
+     , TITLE
+     , DESCRIPTION
+     , START_DATE
+     , END_DATE
+     , REWARD_POINT
+  FROM
+       TB_EVENT
+ ORDER
+    BY
+       START_DATE;
+COMMIT;
+SELECT * FROM TB_EVENT;
