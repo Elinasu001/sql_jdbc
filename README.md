@@ -115,6 +115,11 @@ DDL(CREATE, ALTER, DROP)
   - SAVEPOINT
 ---
 OBJECT(VIEW)
+- 09_OBJECT(VIEW)
+
+---
+OBJECT(SEQUENCE, DCL(GRANT, REVOKE)
+- 10_OBJECT(SEQUENCE, DCL(GRANT, REVOKE)
 
 ---
 
@@ -122,6 +127,10 @@ OBJECT(VIEW)
 
 [JAVA (JDBC를 위한 JAVA GITHUB 링크)](https://github.com/Elinasu001/jdbc_workspace.git) + DATABASE
 
+00_JDBC_TEST
+  - HOMEWORK
+    
+01_JDBC_STATEMENT
 
 ---
 🛠 개발 환경
