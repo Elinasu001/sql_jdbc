@@ -70,15 +70,17 @@ ORDER
 
 ----------------------------------------------------
 ---HOMEWORK3---
+DROP TABLE TB_EVENT;
 CREATE TABLE TB_EVENT(
-	EVENT_ID NUMBER PRIMARY KEY,
+	EVENT_NO NUMBER PRIMARY KEY,
+	EVENT_ID VARCHAR2(15) UNIQUE NOT NULL,
 	TITLE VARCHAR2(255) NOT NULL,
 	DESCRIPTION CLOB,
 	START_DATE DATE NOT NULL,
 	END_DATE DATE NOT NULL,
 	REWARD_POINT NUMBER NOT NULL
 );
-
+DROP SEQUENCE SEQ_EVENT;
 CREATE SEQUENCE SEQ_EVENT START WITH 1;
 
 INSERT
@@ -87,17 +89,21 @@ INSERT
 VALUES
        (
        SEQ_EVENT.NEXTVAL
+     , 'A01'
      , '아침 6시 기상하고 인증하기!'
      , '매일 아침에 함꼐 일찍 기상하고 더 의미있는 하루를 시작을 같이 만들어가요!'
      , TO_DATE('2025-09-01','YYYY-MM-DD')
      , TO_DATE('2025-09-07','YYYY-MM-DD')
      , 500
        );
+
 COMMIT;
+
 SELECT * FROM TB_EVENT;
 ----------------------
 SELECT
-       EVENT_ID
+	   EVENT_NO
+     , EVENT_ID
      , TITLE
      , DESCRIPTION
      , START_DATE
