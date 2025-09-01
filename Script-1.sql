@@ -33,5 +33,4 @@ CREATE TABLE BOARD(
     DELETE_YN CHAR(1) DEFAULT 'N'	-- 삭제 여부 컬럼
 );
 
-
-
+SELECT * FROM MEMBER;
