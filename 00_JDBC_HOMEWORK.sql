@@ -115,3 +115,174 @@ SELECT
     BY
        START_DATE;
 SELECT * FROM TB_EVENT;
+---------------------------
+-- 1) 챌린지 사용자 테이블 --
+DROP TABLE CH_USER CASCADE CONSTRAINTS;
+
+CREATE TABLE CH_USER(
+	USER_NO NUMBER PRIMARY KEY,					-- PK, 시퀀스로 관리
+	USER_ID VARCHAR2(30) UNIQUE NOT NULL,		-- 로그인 ID
+	USER_NAME VARCHAR2(50) NOT NULL,			-- 이름
+	EMAIL VARCHAR2(100) UNIQUE,					-- 이메일(중복 방지)
+	PASSWORD VARCHAR2(100) NOT NULL,			-- 비밀번호 
+	ENROLL_DATE DATE DEFAULT SYSDATE NOT NULL	-- 가입일
+);
+-- USER PK 시퀀스
+DROP SEQUENCE SEQ_USER;
+
+CREATE SEQUENCE SEQ_USER START WITH 1 NOCACHE;
+
+--2) 챌린지 테이블 --
+-- CHALLENGE 테이블 삭제
+DROP TABLE TB_CHALLENGE CASCADE CONSTRAINTS;
+
+CREATE TABLE TB_CHALLENGE(
+	CHALLENGE_NO NUMBER PRIMARY KEY,			-- PK, 시퀀스
+	CHALLENGE_ID VARCHAR2(30) UNIQUE NOT NULL,	-- 외부 공개 ID
+	TITLE VARCHAR2(255) NOT NULL,				-- 제목	
+	DESCRIPTION CLOB, 							-- 설명
+	START_DATE DATE NOT NULL,					-- 시작일
+	END_DATE DATE NOT NULL,						-- 종료일
+	REWARD_POINT NUMBER DEFAULT 0 NOT NULL,		-- 포인트(기본 0)
+	CREATOR_USER_NO NUMBER NOT NULL,			-- 생성자 FK (TB_USER.USER_NO)
+	ENROLL_DATE DATE DEFAULT SYSDATE NOT NULL,	-- 생성일시
+	CONSTRAINT CK_CHALLENGE_DATE CHECK (START_DATE <= END_DATE),
+	CONSTRAINT FK_CHALLENGE_CREATOR FOREIGN KEY (CREATOR_USER_NO)
+		REFERENCES CH_USER(USER_NO)
+);
+
+-- 챌린지 PK 시퀀스
+DROP SEQUENCE SEQ_CHALLENGE;
+CREATE SEQUENCE SEQ_CHALLENGE START WITH 1 NOCACHE;
+
+---------
+-- 1) 챌린지 유저 생성
+INSERT 
+  INTO 
+       CH_USER 
+       (
+       USER_NO
+     , USER_ID
+     , USER_NAME
+     , EMAIL
+     , PASSWORD
+	   ) 
+VALUES 
+       (
+	    SEQ_USER.NEXTVAL
+	  , 'psh08'
+	  , '박수현'
+	  , 'psh08@kh.co.kr'
+	  , '1234'
+	    );
+COMMIT;
+INSERT 
+  INTO 
+       CH_USER 
+       (
+       USER_NO
+     , USER_ID
+     , USER_NAME
+     , EMAIL
+     , PASSWORD
+	   ) 
+VALUES 
+	   (
+       SEQ_USER.NEXTVAL
+     , 'psh09'
+     , '홍길동'
+     , 'psh09@kh.co.kr'
+     ,  '1234'
+      );
+SELECT * FROM CH_USER;
+COMMIT;
+SELECT USER_NO, USER_ID, USER_NAME, EMAIL, ENROLL_DATE FROM CH_USER ORDER BY USER_NO;
+-- 2) 챌린지 생성 (CREATOR_USER_NO = 1 가정)
+INSERT 
+  INTO 
+       TB_CHALLENGE 
+       (
+       CHALLENGE_NO
+     , CHALLENGE_ID
+     , TITLE
+     , DESCRIPTION
+     , START_DATE
+     , END_DATE
+     , REWARD_POINT
+     , CREATOR_USER_NO
+     , ENROLL_DATE
+	   ) 
+VALUES 
+		(
+	    SEQ_CHALLENGE.NEXTVAL
+	  , 'CHL-A'
+	  , '아침 6시 기상 챌린지'
+	  , '매일 아침 6시에 기상 후 인증샷 업로드'
+	  , DATE '2025-09-05'
+	  , DATE '2025-09-30'
+	  , 100
+	  ,  1
+	  , SYSDATE
+		);
+COMMIT;
+INSERT 
+  INTO 
+       TB_CHALLENGE 
+       (
+       CHALLENGE_NO
+     , CHALLENGE_ID
+     , TITLE
+     , DESCRIPTION
+     , START_DATE
+     , END_DATE
+     , REWARD_POINT
+     , CREATOR_USER_NO
+     , ENROLL_DATE
+	   ) 
+VALUES 
+	   (
+	   SEQ_CHALLENGE.NEXTVAL
+	 , 'CHL-B'
+	 , 'SNS 인증하기!'
+	 , '매일 3번 인증샷 업로드'
+	 , DATE '2025-09-30'
+	 , DATE '2025-10-31'
+	 , 200
+	 , 2
+	 , SYSDATE
+	   );
+COMMIT;
+SELECT * FROM TB_CHALLENGE;
+
+-----------------------------------------------------------
+-- 3) 챌린지 참여 관계 테이블 (유저 ↔ 챌린지)
+------------------------------------------------------------
+SELECT u.USER_NO, u.USER_ID, c.CHALLENGE_NO, c.CHALLENGE_ID, c.TITLE
+FROM CH_USER u
+INNER JOIN TB_CHALLENGE c
+        ON c.CREATOR_USER_NO = u.USER_NO
+ORDER BY u.USER_NO, c.CHALLENGE_NO;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
