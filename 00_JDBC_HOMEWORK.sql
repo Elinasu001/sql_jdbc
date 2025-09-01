@@ -55,6 +55,7 @@ VALUES
      , '몬스테라'
      , '열대관엽식물'
        );
+COMMIT;
 SELECT * FROM TB_PLANT;
 ----------------------------------------------------
 SELECT
@@ -92,6 +93,7 @@ VALUES
      , TO_DATE('2025-09-07','YYYY-MM-DD')
      , 500
        );
+COMMIT;
 SELECT * FROM TB_EVENT;
 ----------------------
 SELECT
@@ -106,5 +108,4 @@ SELECT
  ORDER
     BY
        START_DATE;
-COMMIT;
 SELECT * FROM TB_EVENT;
