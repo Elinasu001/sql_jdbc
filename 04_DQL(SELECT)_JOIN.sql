@@ -42,11 +42,12 @@ SELECT
   JOIN
        DEPARTMENT ON (DEPT_CODE = DEPT_ID)
  WHERE 
-       DEPT_TITLE = '인사관리부';
+       DEPT_TITLE = ?
 
 -- 3. 직급명을 입력받아 직급이 동일한 사원 조회(과장 입력시 과장인 사원들만 조회되도록).
 SELECT
-       EMP_NAME
+	   JOB_NAME
+     , EMP_NAME
   FROM
        EMPLOYEE 
   JOIN
@@ -72,8 +73,6 @@ SELECT
 	 , ENT_YN
   FROM 
        EMPLOYEE
-  JOIN
-       DEPARTMENT ON ( DEPT_CODE = DEPT_ID)
  WHERE
  	   EMP_ID = '200'; 
 
@@ -247,6 +246,48 @@ UPDATE
  WHERE
        EMP_ID = ?;
        
+UPDATE
+       EMPLOYEE E
+   SET
+       SALARY    = 5000000
+     , JOB_CODE  = (
+               SELECT
+                        J.JOB_CODE
+                 FROM
+                        JOB J
+                WHERE
+                        J.JOB_NAME = '과장'
+           )
+         , DEPT_CODE = (
+               SELECT
+                        D.DEPT_ID
+                 FROM
+                        DEPARTMENT D
+                WHERE
+                        D.DEPT_TITLE = '총무부'
+           )
+ WHERE
+       E.EMP_ID  = '300';
+
+SELECT * FROM DEPARTMENT;
+SELECT * FROM EMPLOYEE;
+SELECT * FROM JOB;
+
+-- 확인용
+SELECT
+        E.EMP_ID
+      , E.EMP_NAME
+      , E.SALARY
+      , D.DEPT_TITLE
+      , J.JOB_NAME
+  FROM
+        EMPLOYEE E
+  JOIN
+        DEPARTMENT D ON (E.DEPT_CODE = D.DEPT_ID)
+  JOIN
+        JOB J        ON (E.JOB_CODE  = J.JOB_CODE)
+ WHERE
+        E.EMP_ID = '300';
 
 
 

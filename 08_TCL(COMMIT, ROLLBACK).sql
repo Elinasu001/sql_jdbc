@@ -39,6 +39,46 @@
 CREATE TABLE EMP_COPY
     AS SELECT EMP_ID, EMP_NAME FROM EMPLOYEE;
 
+INSERT
+  INTO
+       EMP_COPY
+       (
+       EMP_ID
+     , EMP_NAME
+       )
+VALUES
+       (
+       222
+     , '고기기'
+       );
+
+INSERT
+  INTO
+       EMP_COPY
+       (
+       EMP_ID
+     , EMP_NAME
+       )
+VALUES
+       (
+       999
+     , '고기기'
+       );
+SELECT * FROM EMP_COPY;
+
+
+INSERT
+  INTO
+       EMP_COPY
+       (
+       EMP_ID
+     , EMP_NAME
+       )
+VALUES
+       (
+       900
+     , '홍길동'
+       );
 SELECT * FROM EMP_COPY;
 
 -- 사번이 900번인 사원 삭제
