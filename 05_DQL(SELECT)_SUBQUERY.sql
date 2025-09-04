@@ -648,6 +648,8 @@ FROM 					-- 1. 줄세우기 끝난 상태에서
            , SALARY
         FROM
              EMPLOYEE
+       WHERE
+       		 SALARY IS NOT NULL
        ORDER
           BY 
              SALARY DESC)
@@ -659,13 +661,15 @@ WHERE
 /*
 	최신 모던한 방법
 	OFFSET
-	FORM 절 인라인 넣고 싶지않아 ~~
+	FROM 절 인라인 넣고 싶지않아 ~~
 */
 SELECT
        EMP_NAME
      , SALARY
   FROM
        EMPLOYEE
+ WHERE
+ 	   SALARY IS NOT NULL
  ORDER
     BY
        SALARY DESC -- 1. 여기까지만 돌리면 정렬이 끝난 상태로 나오고
