@@ -1,6 +1,254 @@
+SELECT * FROM EMPLOYEE;  -- DEPT_CODE JOB_CODE
+SELECT * FROM DEPARTMENT; -- DEPT_ID
+SELECT * FROM JOB;				--    JOB_ID
+
+
+SELECT
+       EMP_ID
+     , EMP_NAME
+     , SALARY
+ FROM
+      EMPLOYEE;
+
+SELECT
+       DEPT_TITLE
+  FROM
+       DEPARTMENT;
+
+SELECT
+       JOB_NAME
+  FROM
+       JOB;
+-- 1. 회원 전체 조회(사번, 사원명, 급여, 부서명, 직급명)
+SELECT
+       EMP_ID AS "사번"
+     , EMP_NAME AS "사원명"
+     , SALARY AS "급여"
+     , DEPT_TITLE AS "부서명"
+     , JOB_NAME AS "직급명"
+ FROM
+       EMPLOYEE
+ LEFT     
+ JOIN
+       DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+ JOIN  
+	   JOB USING (JOB_CODE);
+
+-- 2. 부서명을 입력받아 부서가 동일한 사원 조회(총무부 입력시 총무부인 사원들만 조회되도록)
+SELECT
+       EMP_NAME
+  FROM
+       EMPLOYEE
+  JOIN
+       DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+ WHERE 
+       DEPT_TITLE = '인사관리부';
+
+-- 3. 직급명을 입력받아 직급이 동일한 사원 조회(과장 입력시 과장인 사원들만 조회되도록).
+SELECT
+       EMP_NAME
+  FROM
+       EMPLOYEE 
+  JOIN
+       JOB USING (JOB_CODE)
+ WHERE 
+       JOB_NAME = '대리';
+
+-- 4. 사원 상세 조회(사번을 입력받아서 모든 컬럼 값 조회)
+SELECT
+	   EMP_ID
+	 , EMP_NAME
+	 , EMP_NO
+	 , EMAIL
+	 , PHONE
+	 , DEPT_CODE
+	 , JOB_CODE
+	 , SAL_LEVEL 
+	 , SALARY
+	 , BONUS
+	 , MANAGER_ID
+	 , HIRE_DATE
+	 , ENT_DATE
+	 , ENT_YN
+  FROM 
+       EMPLOYEE
+  JOIN
+       DEPARTMENT ON ( DEPT_CODE = DEPT_ID)
+ WHERE
+ 	   EMP_ID = '200'; 
+
+--SELECT
+--       EMP_NAME
+--     , SALARY
+-- FROM
+--      (SELECT
+--	       	  EMP_NAME
+--	       ,  SALARY
+--	    FROM
+--	          EMPLOYEE
+--	   WHERE
+--	          SALARY IS NOT NULL
+--	   ORDER
+--	      BY
+--	         SALARY DESC)
+--WHERE
+--      ROWNUM >= 5;
+
+-- 5. 급여가 높은 상위 다섯명 조회
+SELECT
+       EMP_NAME
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+	   SALARY IS NOT NULL
+ ORDER
+    BY
+       SALARY DESC
+OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY;
+
+-- 6 급여가 낮은 하위 다섯명 조회
+SELECT
+       EMP_NAME
+     , SALARY
+  FROM
+       EMPLOYEE
+ WHERE
+	   SALARY IS NOT NULL
+ ORDER
+    BY
+       SALARY 
+OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY;
+
+-- 7. 사원 추가 기능
+INSERT
+  INTO
+	   EMPLOYEE
+VALUES
+	   (
+	   300
+	 , '김김김'
+	 , '202020-2020202'
+	 , 'kee@kh.or.kr'
+	 , '01088887777'
+	 , 'D8'
+	 , 'J4'
+	 , 'S3'
+	 , 5000000
+	 , NULL
+	 , NULL
+	 , SYSDATE
+	 , NULL
+	 , N
+	   );
+
+--INSERT 
+--  INTO 
+--       EMPLOYEE 
+--       (
+--       EMP_ID
+--     , EMP_NAME
+--     , EMP_NO
+--     , EMAIL
+--     , PHONE
+--     , DEPT_CODE
+--     , JOB_CODE
+--     , SAL_LEVEL
+--     , SALARY
+--     , BONUS
+--     , MANAGER_ID
+--     , HIRE_DATE
+--     , ENT_DATE
+--     , ENT_YN
+--	  ) 
+--VALUES 
+--      (
+--      '300'
+--    , '김김김'
+--    , '202020-2020202'
+--    , 'kee@kh.or.kr'
+--    , '01088887777'
+--    , 'D8'
+--    , 'J4'
+--    , 'S3'
+--    , 5000000
+--    , NULL
+--    , NULL
+--    , SYSDATE
+--    , NULL
+--    , 'N'
+--);
+
+
+
+INSERT
+  INTO
+  	   EMPLOYEE
+       (
+       EMP_ID
+     , EMP_NAME
+     , EMP_NO
+     , EMAIL
+     , PHONE
+     , DEPT_CODE
+     , JOB_CODE
+     , SAL_LEVEL
+     , SALARY
+     , BONUS
+     , HIRE_DATE  
+       )
+VALUES
+ 	   (
+	   SEQ_EID.NEXTVAL
+	 , '홍길길'
+	 , '631010-2653546'
+	 , 'kth04@kh.or.kr'
+	 , '01077607879'
+	 , 'D9'
+	 , 'J5'
+	 , 'S4'
+	 , 5000000
+	 , 100
+	 , SYSDATE
+ 	   );
+
+
 SELECT * FROM EMPLOYEE;
-SELECT * FROM DEPARTMENT;
-SELECT * FROM JOB;
+
+-- 8. 
+--SELECT
+--       SALARY
+--     , JOB_NAME
+--     , DEPT_TITLE
+--  FROM 
+-- 	   EMPLOYEE
+--  JOIN
+--       JOB USING (JOB_CODE)
+--  JOIN
+--       DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+
+-- 8 사원 정보 수정(사번을 입력받아 급여, 직급, 부서 수정)
+UPDATE 
+       EMPLOYEE
+   SET 
+       SALARY   = ?
+     , JOB_CODE = ?
+     , DEPT_CODE= ?
+ WHERE 
+       EMP_ID   = ?;
+ 
+        
+-- 9.사원 퇴사 기능(사번을 입력받아 퇴사 여부, 퇴사일 수정)
+UPDATE
+       EMPLOYEE
+  SET
+       ENT_DATE = ?
+     , ENT_YN = ?
+ WHERE
+       EMP_ID = ?;
+       
+
+
 
 -- 전체 사원들의 사번, 사원명, 부서코드, 부서명을 한꺼번에 조회하고 싶다.★★★★면접 단골 질문★★★★ JOIN 몇개 테이블까지 해봤는지
 SELECT

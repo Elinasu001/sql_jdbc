@@ -26,7 +26,7 @@
 */
 SELECT * FROM EMPLOYEE;
 
---INSERT INTO EMPLOYEE VALUEW ('김태호'); -- 한행인데 이름만 넣음? 안돼 !! 컬럼의 개수만큼 넣으세요
+--INSERT INTO EMPLOYEE VALUES ('김태호'); -- 한행인데 이름만 넣음? 안돼 !! 컬럼의 개수만큼 넣으세요
 -- 현재는 받을 수 없으니 직접 만들었지만, 실제로는 입력을 받아서 테이블에 넣을거임
 INSERT
   INTO
@@ -46,7 +46,7 @@ VALUES
 	 , NULL
 	 , SYSDATE
 	 , NULL
-	 , 'N'
+	 , N
        );
 SELECT * FROM EMPLOYEE WHERE EMP_ID = 223; -- 추가 ~
 
@@ -55,8 +55,8 @@ SELECT * FROM EMPLOYEE WHERE EMP_ID = 223; -- 추가 ~
  	=> 테이블 특정 컬럼만 선택해서 컬럼에 값을 추가하면서 행을 추가할 때 사용
 	INSERT는 무조건 한 행 단위로 추가가 되기 때문에 작성하지 않은 컬럼은 NULL값이 들어감
 	
-	주의할 점 ) NOT NULL이 달려있는 컬럼은 반드시 테이블 명 뒤에 컬럼명을 적어야함
-	예외 사항 ) NOT NULL 제약조건이 달려있는데 기본값이 있는 경우는 DEFAULT VALUE가 들어감 	
+	※ 주의할 점 : NOT NULL이 달려있는 컬럼은 반드시 테이블 명 뒤에 컬럼명을 적어야함
+	▷ 예외 사항 ) NOT NULL 제약조건이 달려있는데 기본값이 있는 경우는 DEFAULT VALUE가 들어감 	
 */
 
 INSERT
