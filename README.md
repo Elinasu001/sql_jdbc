@@ -8,7 +8,7 @@
 
 :paperclip: **[데이터베이스 공부 기록 노션](https://ubiquitous-woodpecker-cc5.notion.site/SQL-JDBC-9-5-2598e71b864f80af86a1c402ca478de9?source=copy_link)** 
 
-## 📘 학습 내용 요약
+## 학습 내용 요약
 ---
 DQL(SELECT)
 DDL(DATA QUERY LANGUAGE)
