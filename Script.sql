@@ -346,6 +346,6 @@ SELECT COUNT(*) AS would_update
 -- 0
 
 
-
+SELECT * FROM EMPLOYEE;
 
 
