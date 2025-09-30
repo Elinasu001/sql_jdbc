@@ -153,7 +153,7 @@ INSERT INTO KH_BOARD(BOARD_NO, BOARD_TYPE, CATEGORY_NO, BOARD_TITLE, BOARD_CONTE
 
 INSERT INTO KH_BOARD(BOARD_NO, BOARD_TYPE, CATEGORY_NO, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER) VALUES(SEQ_BNO.NEXTVAL, 1, 10, '모바일 앱 개발 트렌드', 'Flutter와 React Native를 비교한 크로스플랫폼 개발 가이드입니다.', 1);
 
-
+-- 확인용
 
 --SELECT RNUM, BOARD_NO, BOARD_TITLE FROM()
 --SELECT ROWNUM RNUM, BOARD_NO, BOARD_TITLE 
@@ -202,6 +202,9 @@ WHERE
     BY     
        BOARD_NO DESC
 OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY;
+
+-- 확인용
+
 ----------------------------------------------------
 ---------------     REPLY(댓글) 관련    -------------------	
 ----------------------------------------------------
