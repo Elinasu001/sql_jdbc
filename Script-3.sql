@@ -155,6 +155,53 @@ INSERT INTO KH_BOARD(BOARD_NO, BOARD_TYPE, CATEGORY_NO, BOARD_TITLE, BOARD_CONTE
 
 
 
+--SELECT RNUM, BOARD_NO, BOARD_TITLE FROM()
+--SELECT ROWNUM RNUM, BOARD_NO, BOARD_TITLE 
+--	FROM(
+--SELECT * FROM KH_BOARD ORDER BY BOARD_NO DESC;
+--	))
+--WHERE
+--      RNUM BETWEEN 20 AND 30;
+
+-- ROWNUM 보다 성능 더 좋은 OFFSET 사용 : 0번째에서 5개 / 1번째에서 5개... 들고 갈 수 있다.
+SELECT *
+  FROM KH_BOARD
+ORDER BY BOARD_NO DESC
+OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY;
+						-- boardLimit
+     
+/*
+ * OFFSET 0
+ * 1 -> 0
+ * 2 -> 5
+ * 3 -> 10
+ * (currentPage -1) * boardLimit
+ */
+
+SELECT * FROM KH_CATEGORY;	-- KH_CATEGORY 의 NAME들갈 예정
+SELECT * FROM KH_MEMBER; --  BOARD_WRITER 에서 USER_NAME 들고갈 예정
+-- JOIN 필요
+SELECT
+	   BOARD_NO
+	 , CATEGORY_NAME
+	 , USER_NAME
+	 , BOARD_TITLE
+	 , CREATE_DATE
+	 , COUNT
+ FROM
+       KH_BOARD
+ JOIN
+       KH_CATEGORY USING (CATEGORY_NO)
+ JOIN 
+       KH_MEMBER ON (BOARD_WRITER = USER_NO)
+WHERE
+       KH_BOARD.STATUS = 'Y'
+  AND
+	   BOARD_TYPE = 1 
+ ORDER
+    BY     
+       BOARD_NO DESC
+OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY;
 ----------------------------------------------------
 ---------------     REPLY(댓글) 관련    -------------------	
 ----------------------------------------------------
@@ -206,6 +253,7 @@ COMMENT ON COLUMN KH_ATTACHMENT.FILE_LEVEL IS '파일레벨(1/2)';
 
 CREATE SEQUENCE SEQ_FNO
 NOCACHE;
+
 
 COMMIT;
 
