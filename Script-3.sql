@@ -73,7 +73,7 @@ CREATE TABLE KH_BOARD(
   BOARD_TITLE VARCHAR2(100) NOT NULL,
   BOARD_CONTENT VARCHAR2(4000) NOT NULL,
   BOARD_WRITER NUMBER NOT NULL,
-  COUNT NUMBER DEFAULT 0,
+  COUNT NUMBER DEFAULT 0,	-- 카운트 정렬
   CREATE_DATE DATE DEFAULT SYSDATE NOT NULL,
   STATUS VARCHAR2(1) DEFAULT 'Y' CHECK (STATUS IN('Y', 'N')),
   FOREIGN KEY (BOARD_WRITER) REFERENCES KH_MEMBER(USER_NO), 
@@ -235,14 +235,14 @@ NOCACHE;
 ----------------------------------------------------
 
 CREATE TABLE KH_ATTACHMENT (
-  FILE_NO NUMBER PRIMARY KEY,
-  REF_BNO NUMBER NOT NULL,		-- 외래키
-  ORIGIN_NAME VARCHAR2(255) NOT NULL, -- 원본 파일명
-  CHANGE_NAME VARCHAR2(255) NOT NULL, -- 변경한 파일명
-  FILE_PATH VARCHAR2(1000),
+  FILE_NO NUMBER PRIMARY KEY, 	-- 시퀀스
+  REF_BNO NUMBER NOT NULL,		-- 외래키, 어느 게시글에 있는지 알아야 되기 때문에 게시글 번호를 다는 컬럼이다.
+  ORIGIN_NAME VARCHAR2(255) NOT NULL, -- 원본 파일명 	-- 선택의 영역
+  CHANGE_NAME VARCHAR2(255) NOT NULL, -- 변경한 파일명	-- 무조건 
+  FILE_PATH VARCHAR2(1000),			  -- 일반/사진 파일 업로드 다르기 때문  -- 일단 여기까지는 DEFAULT 값이다.
   UPLOAD_DATE DATE DEFAULT SYSDATE NOT NULL,
-  FILE_LEVEL NUMBER, -- 사진 게시판 최대 4개, 
-  STATUS VARCHAR2(1) DEFAULT 'Y' CHECK(STATUS IN('Y', 'N')),
+  FILE_LEVEL NUMBER, -- 사진 게시판 최대 4개(앞에 보이는 사진, 상세보기 사진), 일반 X
+  STATUS VARCHAR2(1) DEFAULT 'Y' CHECK(STATUS IN('Y', 'N')),	-- 삭제여부
   FOREIGN KEY (REF_BNO) REFERENCES KH_BOARD(BOARD_NO)
 );
 
@@ -260,4 +260,61 @@ NOCACHE;
 
 COMMIT;
 
+SELECT * FROM KH_BOARD;
+SELECT * FROM KH_ATTACHMENT;
 
+
+/*
+CREATE SEQUENCE SEQ_TEST
+NOCACHE;
+
+SELECT SEQ_TEXT.CURRVAL
+  FROM DUAL; -- 이렇게 하면 안나옴 WHY? 아직 밸류값이 없기 때문이다. 
+-- 밸류 값을 만들려면 아래와 같이 해야 CURRVAL이 NEXTVAL를 반환해준다. 단, 적합한 방법은 아니다.
+  
+ SELECT SEQ_TEXT.NEXTVAL
+   FROM DUAL;
+ SELECT SEQ_TEXT.CURRVAL
+   FROM DUAL;
+
+
+권장 방법 : selectKey
+*/
+
+
+SELECT BOARD_TITLE, BOARD_NO
+  FROM KH_BOARD
+ WHERE
+       BOARD_TITLE LIKE '%' || '프' || '%';
+
+
+SELECT BOARD_TITLE, BOARD_NO
+  FROM KH_BOARD
+  JOIN KH_MEMBER ON (BOARD_WRITER = USER_NO)
+WHERE
+      BOARD_CONTENT LIKE '%' || '성' || '%';
+/*
+	전까지는 정적 SQL 이제 넘어오는 값에 따라 동적 SQL 사용해보자
+	https://mybatis.org/mybatis-3/dynamic-sql.html
+*/
+
+
+
+
+
+-- 사용자가 조건을 내용으로 키워드를 다 라고 입력한 게시글 개수 필요
+SELECT COUNT(*)
+  FROM KH_BOARD
+  JOIN KH_MEMBER ON BOARD_WRITER = USER_NO
+ WHERE KH_BOARD.STATUS = 'Y'
+   AND BOARD_CONTENT LIKE '%' || '다' || '%';
+
+
+-- 사용자가 조건을 제목으로 키워드를 다라고 입력한 게시글 개수
+SELECT COUNT(*)
+  FROM KH_BOARD
+  JOIN KH_MEMBER ON BOARD_WRITER = USER_NO
+ WHERE KH_BOARD.STATUS = 'Y'
+   AND BOARD_TITLE LIKE '%' || '다' || '%';
+
+--> 즉, 컬럼만 바뀐다. --> xml에서는 동적 mybatis 사용하여 if를준다
