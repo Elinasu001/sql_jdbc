@@ -318,3 +318,52 @@ SELECT COUNT(*)
    AND BOARD_TITLE LIKE '%' || '다' || '%';
 
 --> 즉, 컬럼만 바뀐다. --> xml에서는 동적 mybatis 사용하여 if를준다
+
+-- 게시판 이미지, 게시글 등록은 메인 이미지를 가져와서 등록 해주는데 이미지는 ATTACHMENT에 있음
+SELECT
+       BOARD_NO
+     , BOARD_TITLE
+     , COUNT
+ FROM
+      KH_BOARD
+WHERE
+      BOARD_TYPE = 2
+  AND
+      STATUS = 'Y'
+ORDER
+   BY 
+      BOARD_NO DESC;
+
+--> 그래서 경로/CHANGE_NAME까지 얻어와야 사진을 얻어낼 수 있다
+SELECT 
+       FILE_PATH
+     , CHANGE_NAME
+     , REF_BNO
+  FROM
+       KH_ATTACHMENT
+ WHERE
+       STATUS = 'Y'
+   AND
+       FILE_LEVEL = 1;
+
+   --> 서브 쿼리 할 경우 스칼라 쿼리를 사용해야되는데 이 경우 성능이 떨어질 수 있다.
+   --> JOIN을 사용하는 게 좋다
+
+SELECT
+       BOARD_NO
+     , BOARD_TITLE
+     , COUNT
+ FROM
+      KH_BOARD
+ JOIN
+      KH_ATTACHMENT ON (REF_BNO = BOARD_NO)
+WHERE
+      BOARD_TYPE = 2
+  AND
+      KH_BOARD.STATUS = 'Y'
+ORDER
+   BY 
+      BOARD_NO DESC;
+
+
+
