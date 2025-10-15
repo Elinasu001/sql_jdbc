@@ -16,5 +16,28 @@ COMMIT;
 
 SELECT * FROM KH_MEMBER;
 
+-- 아이디 중복체크 -----------------------------------------------------------
+SELECT USER_ID FROM KH_MEMBER WHERE  USER_ID = 'admin';
+-- 있을 땐 아이디값 없을 때 null
+SELECT COUNT(*) FROM KH_MEMBER WHERE USER_ID = 'admin';
+-- 있을 땐 1 없을 땐 0
+SELECT DECODE(COUNT(*), 0, 'NNNY', 1, 'NNNN') FROM KH_MEMBER WHERE USER_ID ='admin';
+-- 스크립트의 조건을 줄이고 싶을 경우 sql에서 decode 방식으로 조건 달아주기
+-- return bd.checkId(sqlSession, id);
 
+/*
+ * String userId = bd.checkId(sqlSession, id);
+ * if(userId != null){
+ * 	return = "NNNN"
+ * } else {
+ * 	return = "NNNY"
+ * }
+ * 
+ * if(userId != null || result > 0){ -- 길다...sql문으로 줄이자
+ * 	return = "NNNN"
+ * } else {
+ * 	return = "NNNY"
+ * }
+ * 
+ */
 
