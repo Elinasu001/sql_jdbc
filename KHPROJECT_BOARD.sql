@@ -365,5 +365,19 @@ ORDER
    BY 
       BOARD_NO DESC;
 
-
+ SELECT
+        BOARD_NO 
+      , BOARD_TITLE
+      , FILE_PATH
+      , CHANGE_NAME
+ FROM
+        KH_BOARD
+ LEFT 
+ JOIN
+        KH_ATTACHMENT ON (REF_BNO = BOARD_NO)
+ WHERE 
+        KH_BOARD.STATUS = 'Y'
+	ORDER 
+	   BY
+        BOARD_NO DESC;
 
